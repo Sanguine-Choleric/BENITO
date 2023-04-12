@@ -8,7 +8,7 @@ import org.json.JSONArray;
  * Hello world!
  */
 public class App {
-    static JSONArray classes = new JSONArray();
+    static JSONArray courses = new JSONArray();
     static JSONArray assignments = new JSONArray();
 
     public static void main(String[] args) throws Exception {
