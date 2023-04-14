@@ -30,7 +30,7 @@ public class MyListener extends ListenerAdapter {
                     channel.sendMessage("Getting classes").queue();
                     try {
                         System.out.println("Connecting for classes");
-                        App.courses = CanvasGet.getClasses();
+                        App.courses = CanvasGet.getCourses();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -61,6 +61,29 @@ public class MyListener extends ListenerAdapter {
                     JSONObject assignment = App.assignments.getJSONObject(i);
                     channel.sendMessage(assignment.getString("name")).queue();
                 }
+            }
+
+            // Standard
+            case "!allhw" -> {
+                MessageChannel channel = event.getChannel();
+
+                if (App.courses.isEmpty()) {
+                    channel.sendMessage("Getting Assignments").queue();
+
+                    try {
+                        App.courses = CanvasGet.getCourses();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                try {
+                    App.allAssignments = CanvasGet.getAllAssignments();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                // TODO: Need a better way of sending large messages
+                // Messaging all of App.allAssignments WILL hit rate limit
             }
         }
     }
