@@ -30,10 +30,10 @@ public class CanvasGet {
         if (responseCode == HttpURLConnection.HTTP_OK) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = reader.readLine();
-            JSONArray courses = new JSONArray(response);
+            JSONArray objects = new JSONArray(response);
             reader.close();
 
-            return courses;
+            return objects;
         } else {
             return null;
         }
