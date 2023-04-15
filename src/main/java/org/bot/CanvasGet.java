@@ -1,6 +1,5 @@
 package org.bot;
 
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,15 +15,14 @@ import java.util.Objects;
  */
 public class CanvasGet {
     /**
-     * Sends a GET request to a Canvas API endpoint and returns a JSONArray of the response
+     * Sends a GET request to the Canvas API using the specified HttpURLConnection object and returns
+     * the response as a JSONArray.
      *
-     * @param url The URL of the Canvas API endpoint to send the GET request to
-     * @return A JSONArray of the response from the Canvas API endpoint
-     * @throws IOException If there is an error reading the response from the API endpoint
+     * @param connection the HttpURLConnection object to use for the request. Built from a String url.
+     * @return a JSONArray containing the response from the Canvas API
+     * @throws IOException if an I/O error occurs while sending the request or reading the response
      */
-    @Nullable
-    private static JSONArray canvasAPIGetter(String url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+    public static JSONArray canvasAPIGetter(HttpURLConnection connection) throws IOException {
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
 
@@ -41,6 +39,7 @@ public class CanvasGet {
         }
     }
 
+
     /**
      * Retrieves a JSONArray of all courses from the Canvas API using the "courses" endpoint.
      *
@@ -49,7 +48,8 @@ public class CanvasGet {
      */
     public static JSONArray getCourses() throws Exception {
         String url = "https://csus.instructure.com/api/v1/courses";
-        return canvasAPIGetter(url);
+        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+        return canvasAPIGetter(connection);
     }
 
     /**
@@ -60,7 +60,8 @@ public class CanvasGet {
      */
     public static JSONArray getHW() throws Exception {
         String url = "https://csus.instructure.com/api/v1/courses/" + 102203 + "/assignments";
-        return canvasAPIGetter(url);
+        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+        return canvasAPIGetter(connection);
     }
 
     /**
@@ -85,7 +86,8 @@ public class CanvasGet {
             // TODO: Fix API response error - Some classes don't have a courseId?. Temp fix by filtering for large course IDs.
             if (courseId > 100000) {
                 String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments";
-                JSONArray assignmentsSingleCourse = canvasAPIGetter(url);
+                HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+                JSONArray assignmentsSingleCourse = canvasAPIGetter(connection);
 
                 // Unpacking each JSONArray received from each url and
                 // Recombining into a single mega-JSONArray
@@ -95,6 +97,13 @@ public class CanvasGet {
                 }
             }
         }
+//        try (FileWriter file = new FileWriter("output.json")) {
+//            System.out.println("writing file");
+//            file.write(allAssignments.toString());
+//        } catch (JSONException e) {
+//            throw new RuntimeException(e);
+//        }
+//        System.out.println("File written");
         return allAssignments;
     }
 }
