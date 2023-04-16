@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class AppTest {
+public class CanvasGetTest {
     // TODO: Figure out how to test API stuff if at all
 
     // Unit-test demo. Mocks a fake JSON source, compares with what's grabbed from Canvas

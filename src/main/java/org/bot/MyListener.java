@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MyListener extends ListenerAdapter {
@@ -29,20 +30,12 @@ public class MyListener extends ListenerAdapter {
                 if (App.courses.isEmpty()) {
                     channel.sendMessage("Getting classes").queue();
                     try {
-                        System.out.println("Connecting for classes");
                         App.courses = CanvasGet.getCourses();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
-
-                for (int i = 0; i < App.courses.length(); i++) {
-                    JSONObject course = App.courses.getJSONObject(i);
-
-                    if (course.getInt("id") > 100000) {
-                        channel.sendMessage(course.getString("name")).queue();
-                    }
-                }
+                channel.sendMessage(messageBuilder(App.courses, "name")).queue();
             }
             case "!hw" -> {
                 MessageChannel channel = event.getChannel();
@@ -50,17 +43,12 @@ public class MyListener extends ListenerAdapter {
                 if (App.assignments.isEmpty()) {
                     channel.sendMessage("Getting Assignments").queue();
                     try {
-                        System.out.println("Connecting for hw");
                         App.assignments = CanvasGet.getHW();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
-
-                for (int i = 0; i < App.assignments.length(); i++) {
-                    JSONObject assignment = App.assignments.getJSONObject(i);
-                    channel.sendMessage(assignment.getString("name")).queue();
-                }
+                channel.sendMessage(messageBuilder(App.assignments, "name")).queue();
             }
 
             // Standard
@@ -68,7 +56,7 @@ public class MyListener extends ListenerAdapter {
                 MessageChannel channel = event.getChannel();
 
                 if (App.courses.isEmpty()) {
-                    channel.sendMessage("Getting Assignments").queue();
+                    channel.sendMessage("Getting Classes").queue();
 
                     try {
                         App.courses = CanvasGet.getCourses();
@@ -76,7 +64,10 @@ public class MyListener extends ListenerAdapter {
                         throw new RuntimeException(e);
                     }
                 }
+
                 try {
+                    channel.sendMessage("Getting Assignments").queue();
+
                     App.allAssignments = CanvasGet.getAllAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -84,11 +75,32 @@ public class MyListener extends ListenerAdapter {
 
                 // TODO: Need a better way of sending large messages
                 // Messaging all of App.allAssignments WILL hit rate limit
-                for (int i = 0; i < App.allAssignments.length(); i++) {
-                    JSONObject assignment = App.allAssignments.getJSONObject(i);
-                    channel.sendMessage(assignment.getString("name")).queue();
-                }
+                channel.sendMessage(messageBuilder(App.allAssignments, "name")).queue();
             }
         }
+    }
+
+    /**
+     * Builds a String message from a JSONArray that contains values associated with a given key.
+     * Avoids Discord rate limiting by concatenating multiple strings with newlines.
+     *
+     * @param source The JSONArray containing JSONObjects to extract values from.
+     * @param key    The key of the value to extract from each JSONObject.
+     */
+    protected static String messageBuilder(JSONArray source, String key) {
+        String message = "";
+
+        // Iterate through each JSONObject in the JSONArray
+        for (int i = 0; i < source.length(); i++) {
+            JSONObject object = source.getJSONObject(i);
+
+            // Check if the JSONObject has a value associated with the given key
+            // Solves issue of non-existent "name" in some classes/assignments
+            if (object.has(key)) {
+                message = message.concat(object.getString(key) + "\n");
+            }
+        }
+//        channel.sendMessage(message).queue();
+        return message;
     }
 }
