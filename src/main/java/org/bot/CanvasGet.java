@@ -29,14 +29,20 @@ public class CanvasGet {
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String response = reader.readLine();
-            JSONArray objects = new JSONArray(response);
+            StringBuilder responseBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseBuilder.append(line);
+            }
             reader.close();
 
-            return objects;
+            String response = responseBuilder.toString();
+
+            return new JSONArray(response);
         } else {
             return null;
         }
+
     }
 
 
@@ -73,6 +79,10 @@ public class CanvasGet {
      * @throws Exception If there is an error retrieving the homework assignments from the API
      */
     public static JSONArray getAllAssignments() throws Exception {
+        if (App.courses.isEmpty()) {
+            return new JSONArray();
+        }
+
         JSONArray allAssignments = new JSONArray();
         int[] courseIds = new int[App.courses.length()];
 

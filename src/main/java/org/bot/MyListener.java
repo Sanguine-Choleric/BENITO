@@ -84,6 +84,10 @@ public class MyListener extends ListenerAdapter {
 
                 // TODO: Need a better way of sending large messages
                 // Messaging all of App.allAssignments WILL hit rate limit
+                for (int i = 0; i < App.allAssignments.length(); i++) {
+                    JSONObject assignment = App.allAssignments.getJSONObject(i);
+                    channel.sendMessage(assignment.getString("name")).queue();
+                }
             }
         }
     }
