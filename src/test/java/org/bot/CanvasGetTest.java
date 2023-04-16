@@ -1,38 +1,72 @@
 package org.bot;
 
 import org.json.JSONArray;
-import org.junit.Test;
+import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 public class CanvasGetTest {
-    // TODO: Figure out how to test API stuff if at all
+    @Nested
+    public class canvasAPIGetterTests {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject obj1 = new JSONObject();
+        JSONObject obj2 = new JSONObject();
 
-    // Unit-test demo. Mocks a fake JSON source, compares with what's grabbed from Canvas
-    // Extremely flawed test that really doesn't do anything
-    @Test
-    public void testCanvasAPIGetter() throws IOException {
-        // Mock the HttpURLConnection object
-        HttpURLConnection connection = mock(HttpURLConnection.class);
-        when(connection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
-        InputStream inputStream = getClass().getResourceAsStream("/org/bot/allAssignments-test.json");
-        when(connection.getInputStream()).thenReturn(inputStream);
+        @BeforeEach
+        public void setup_canvasAPIGetterTests() {
+            obj1.put("name", "Assignment 1");
+            obj1.put("value", "Task 1");
+            obj1.put("id", 100);
+            obj2.put("name", "Assignment 2");
+            obj2.put("value", "Task 2");
+            obj2.put("id", 200);
+            jsonArray.put(obj1);
+            jsonArray.put(obj2);
+        }
 
-        // Call the method being tested
-        JSONArray assignments = CanvasGet.canvasAPIGetter(connection);
+        @Test
+        public void testCanvasAPIGetter() throws IOException {
+            HttpURLConnection mockConnection = mock(HttpURLConnection.class);
+            String jsonArrString = jsonArray.toString();
+            InputStream jsonArrIS = new ByteArrayInputStream(jsonArrString.getBytes());
 
-        // Verify the HTTP request was made with the correct parameters
-        verify(connection).setRequestMethod("GET");
-        verify(connection).setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
+            // Setting up fake API endpoint
+            // Returns known json file to test against
+            when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+            when(mockConnection.getInputStream()).thenReturn(jsonArrIS);
 
-        // Verify the response was parsed correctly
-        assertEquals(36, assignments.length());
-        assertEquals("Core Quiz 1: Software Engineering Concepts Quiz", assignments.getJSONObject(0).getString("name"));
-        assertEquals("Portfolio Scores and Advising Notes - Due Date is the date scores are released ", assignments.getJSONObject(35).getString("name"));
+            JSONArray realJsonArray = CanvasGet.canvasAPIGetter(mockConnection);
+
+            // Checking that http headers in API request are correct
+            verify(mockConnection).setRequestMethod("GET");
+            verify(mockConnection).setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
+
+            // Checking contents of retrieved vs known json
+            assert realJsonArray != null;
+            assertEquals(jsonArray.toString(), realJsonArray.toString());
+        }
+
+        @Test
+        public void testCanvasAPIGetter_noConnection() throws IOException {
+            HttpURLConnection mockConnection = mock(HttpURLConnection.class);
+            String jsonArrString = jsonArray.toString();
+            InputStream jsonArrIS = new ByteArrayInputStream(jsonArrString.getBytes());
+
+            when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_NOT_FOUND);
+
+            JSONArray nullJsonArray = CanvasGet.canvasAPIGetter(mockConnection);
+
+            assertNull(nullJsonArray);
+        }
     }
 }
