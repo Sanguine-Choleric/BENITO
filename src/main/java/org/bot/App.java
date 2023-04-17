@@ -5,14 +5,16 @@ import net.dv8tion.jda.api.JDABuilder;
 import org.json.JSONArray;
 
 public class App {
-    static JSONArray courses = new JSONArray();
+
     static JSONArray assignments = new JSONArray();
 
-    static JSONArray allAssignments = new JSONArray();
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         JDA builder = JDABuilder.createDefault(API_keys.DiscordKey).build();
         builder.addEventListener(new MyListener());
+        System.out.println("Getting Data");
+        DueDateHandler.courses = CanvasGet.getCourses();
+        DueDateHandler.allAssignments = CanvasGet.getAllAssignments();
+        System.out.println("Bot is ready");
     }
 }
 

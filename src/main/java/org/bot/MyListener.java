@@ -27,15 +27,15 @@ public class MyListener extends ListenerAdapter {
             case "!classes" -> {
                 MessageChannel channel = event.getChannel();
 
-                if (App.courses.isEmpty()) {
+                if (DueDateHandler.courses.isEmpty()) {
                     channel.sendMessage("Getting classes").queue();
                     try {
-                        App.courses = CanvasGet.getCourses();
+                        DueDateHandler.courses = CanvasGet.getCourses();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
-                channel.sendMessage(messageBuilder(App.courses, "name")).queue();
+                channel.sendMessage(messageBuilder(DueDateHandler.courses, "name")).queue();
             }
             case "!hw" -> {
                 MessageChannel channel = event.getChannel();
@@ -55,11 +55,11 @@ public class MyListener extends ListenerAdapter {
             case "!allhw" -> {
                 MessageChannel channel = event.getChannel();
 
-                if (App.courses.isEmpty()) {
+                if (DueDateHandler.courses.isEmpty()) {
                     channel.sendMessage("Getting Classes").queue();
 
                     try {
-                        App.courses = CanvasGet.getCourses();
+                        DueDateHandler.courses = CanvasGet.getCourses();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -68,14 +68,46 @@ public class MyListener extends ListenerAdapter {
                 try {
                     channel.sendMessage("Getting Assignments").queue();
 
-                    App.allAssignments = CanvasGet.getAllAssignments();
+                    DueDateHandler.allAssignments = CanvasGet.getAllAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
                 // TODO: Need a better way of sending large messages
                 // Messaging all of App.allAssignments WILL hit rate limit
-                channel.sendMessage(messageBuilder(App.allAssignments, "name")).queue();
+                channel.sendMessage(messageBuilder(DueDateHandler.allAssignments, "name")).queue();
+            }
+
+            case "!upcoming" -> {
+                MessageChannel channel = event.getChannel();
+
+                if (DueDateHandler.courses.isEmpty()) {
+                    channel.sendMessage("Getting Classes").queue();
+                    try {
+                        DueDateHandler.courses = CanvasGet.getCourses();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if (DueDateHandler.allAssignments.isEmpty()) {
+                    channel.sendMessage("Getting Assignments").queue();
+                    try {
+                        DueDateHandler.allAssignments = CanvasGet.getAllAssignments();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                try {
+                    channel.sendMessage("Getting Upcoming Assignments").queue();
+                    String dueToday = DueDateHandler.upcomingDueMessageBuilder();
+                    channel.sendMessage(dueToday).queue();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+
             }
         }
     }
