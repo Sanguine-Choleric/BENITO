@@ -13,6 +13,10 @@ on:
     branches: [ "main", "BENITO-*" ]
   pull_request:
     branches: [ "main", "BENITO-*" ]
+    
+env:
+  CANVAS_KEY: ${{ secrets.CANVAS_KEY }}
+  DISCORD_KEY: ${{ secrets.DISCORD_KEY }}
 
 jobs:
   build:
