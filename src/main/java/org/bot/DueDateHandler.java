@@ -16,9 +16,6 @@ import java.util.Map;
  * This class handles the due dates of assignments.
  */
 public class DueDateHandler {
-    // Due date information due_at as yyyy-mm-dd:time
-    static JSONArray allAssignments = new JSONArray();
-    static JSONArray courses = new JSONArray();
     static ZonedDateTime now = ZonedDateTime.now();
 
     /**
@@ -58,8 +55,8 @@ public class DueDateHandler {
                     // This is terrible, but it works
                     String courseId = Integer.toString(object.getInt("course_id"));
                     String courseName = "";
-                    for (int j = 0; j < DueDateHandler.courses.length(); j++) {
-                        JSONObject course = DueDateHandler.courses.getJSONObject(j);
+                    for (int j = 0; j < App.courses.length(); j++) {
+                        JSONObject course = App.courses.getJSONObject(j);
 
                         if (Integer.parseInt(courseId) == course.getInt("id")) {
                             courseName = course.getString("name");
@@ -82,7 +79,7 @@ public class DueDateHandler {
      * @return String of upcoming due dates
      */
     public static String upcomingDueMessageBuilder() {
-        Map<String, String[]> dueDates = DueDateHandler.upcomingDue(DueDateHandler.allAssignments);
+        Map<String, String[]> dueDates = DueDateHandler.upcomingDue(App.allAssignments);
         String message = "";
 
         // Create a list of map entries from the dueDates map

@@ -79,17 +79,17 @@ public class CanvasGet {
      * @throws Exception If there is an error retrieving the homework assignments from the API
      */
     public static JSONArray getAllAssignments() throws Exception {
-        if (DueDateHandler.courses.isEmpty()) {
+        if (App.courses.isEmpty()) {
             return new JSONArray();
         }
 
         JSONArray allAssignments = new JSONArray();
-        int[] courseIds = new int[DueDateHandler.courses.length()];
+        int[] courseIds = new int[App.courses.length()];
 
         // Building list of course ids to use to build urls
         // Canvas only allows grabbing assignments from one course ata time
-        for (int i = 0; i < DueDateHandler.courses.length(); i++) {
-            JSONObject course = DueDateHandler.courses.getJSONObject(i);
+        for (int i = 0; i < App.courses.length(); i++) {
+            JSONObject course = App.courses.getJSONObject(i);
             courseIds[i] = course.getInt("id");
         }
         for (int courseId : courseIds) {
@@ -107,13 +107,6 @@ public class CanvasGet {
                 }
             }
         }
-//        try (FileWriter file = new FileWriter("output.json")) {
-//            System.out.println("writing file");
-//            file.write(allAssignments.toString());
-//        } catch (JSONException e) {
-//            throw new RuntimeException(e);
-//        }
-//        System.out.println("File written");
         return allAssignments;
     }
 }
