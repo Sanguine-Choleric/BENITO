@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class DatabaseTest {
@@ -50,18 +51,53 @@ public class DatabaseTest {
         jsonAssignments.put(jsonAssignment);
     }
 
-    @Test
-    void testCourseLOAD() throws Exception {
-        db = new Database();
-        db.courseLOAD(jsonCourses);
+    @Nested
+    class courseLOADTests {
 
-        assertEquals(2, db.getCourses_AL().size());
+        @Test
+        void testCourseLOAD() throws Exception {
+            db = new Database();
+            db.courseLOAD(jsonCourses);
 
-        // Checking that the courses were loaded correctly
-        assertEquals(100, db.getCourses_AL().get(0).getCourseID(), "Testing ID getter");
-        assertEquals("Course 1", db.getCourses_AL().get(0).getCourseName(), "Testing name getter");
-        assertEquals(101, db.getCourses_AL().get(1).getCourseID(), "Testing ID getter");
-        assertEquals("Course 2", db.getCourses_AL().get(1).getCourseName(), "Testing name getter");
+            assertEquals(2, db.getCourses_AL().size());
+
+            // Checking that the courses were loaded correctly
+            assertEquals(100, db.getCourses_AL().get(0).getCourseID(), "Testing ID getter");
+            assertEquals("Course 1", db.getCourses_AL().get(0).getCourseName(), "Testing name getter");
+            assertEquals(101, db.getCourses_AL().get(1).getCourseID(), "Testing ID getter");
+            assertEquals("Course 2", db.getCourses_AL().get(1).getCourseName(), "Testing name getter");
+        }
+
+        @Test
+        void testCourseLOADEmpty() throws Exception {
+            db = new Database();
+            db.courseLOAD(new JSONArray());
+
+            assertEquals(0, db.getCourses_AL().size());
+        }
+
+        @Test
+        void testCourseLOADMissingField() throws Exception {
+            db = new Database();
+            jsonCourse = new JSONObject();
+            jsonCourse.put("id", 100);
+            jsonCourses.put(jsonCourse);
+            db.courseLOAD(jsonCourses);
+
+            assertEquals(2, db.getCourses_AL().size(), "Database should refuse to load courses with missing fields");
+        }
+
+        @Test
+        void testCourseLOADNullField() throws Exception {
+            db = new Database();
+            jsonCourse = new JSONObject();
+            jsonCourse.put("id", 100);
+            jsonCourse.put("name", JSONObject.NULL);
+            jsonCourses.put(jsonCourse);
+            db.courseLOAD(jsonCourses);
+
+            assertEquals(2, db.getCourses_AL().size(), "Database should refuse to load courses with null fields");
+        }
     }
 
     @Test
