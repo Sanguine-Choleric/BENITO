@@ -29,9 +29,7 @@ public class MyListener extends ListenerAdapter {
                 if (App.db.getCourses_AL().isEmpty()) {
                     channel.sendMessage("Getting classes").queue();
                     try {
-                        System.out.println("Connecting for classes");
                         App.db.courseLOAD(CanvasGet.getCourses());
-
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -59,6 +57,37 @@ public class MyListener extends ListenerAdapter {
                 }
 
                 channel.sendMessage(messageBuilder(App.db.getAllAss_AL(), "name")).queue();
+            }
+
+            case "!upcoming" -> {
+                MessageChannel channel = event.getChannel();
+                if (App.db.getCourses_AL().isEmpty()) {
+                    channel.sendMessage("Getting Classes").queue();
+
+                    try {
+                        App.db.courseLOAD(CanvasGet.getCourses());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (App.db.getAllAss_AL().isEmpty()) {
+                    channel.sendMessage("Getting All Assignments").queue();
+
+                    try {
+                        App.db.assLOAD(CanvasGet.getAllAssignments());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                channel.sendMessage("Getting Upcoming Assignments").queue();
+                try {
+                    App.db.setUpcomingAss_AL(DueDateHandler.upcomingDue(App.db.getAllAss_AL()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                channel.sendMessage(messageBuilder(App.db.getUpcomingAss_AL(), "name")).queue();
             }
         }
     }

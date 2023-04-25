@@ -15,6 +15,16 @@ public class Database {
     // private JSONArray allAss_JSON = new JSONArray();
     private ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
+    private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
+
+    public ArrayList<Assignment> getUpcomingAss_AL() {
+        return upcomingAss_AL;
+    }
+
+    // Setter for populating upcomingAss_AL with upcoming assignments
+    public void setUpcomingAss_AL(ArrayList<Assignment> upcomingAss_AL) {
+        this.upcomingAss_AL = upcomingAss_AL;
+    }
 
     // Getter for courses_AL; returns an ArrayList of Course objects
     public ArrayList<Course> getCourses_AL() {
@@ -60,6 +70,16 @@ public class Database {
         }
     }
 
+    /**
+     * Returns true if the given JSONObject has non-null values for all the given
+     * keys,
+     * and false otherwise.
+     *
+     * @param obj  the JSONObject to check
+     * @param keys the keys to check for non-null values
+     * @return true if the JSONObject has non-null values for all the given keys,
+     *         and false otherwise.
+     */
     private static boolean hasNonNullValues(JSONObject obj, String... keys) {
         for (String key : keys) {
             if (!obj.has(key) || obj.isNull(key)) {

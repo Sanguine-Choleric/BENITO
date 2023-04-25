@@ -56,7 +56,7 @@ public class CanvasGet {
      * @throws Exception If there is an error retrieving the course from the API
      */
     public static JSONArray getCourses() throws Exception {
-        String url = "https://csus.instructure.com/api/v1/courses";
+        String url = "https://csus.instructure.com/api/v1/courses?per_page_100";
         HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         return canvasAPIGetter(connection);
     }
@@ -87,7 +87,7 @@ public class CanvasGet {
         for (int courseId : courseIds) {
             // TODO: Fix API response error - Some classes don't have a courseId?. Temp fix by filtering for large course IDs.
             if (courseId > 100000) {
-                String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments";
+                String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments?per_page_200";
                 HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
                 JSONArray assignmentsSingleCourse = canvasAPIGetter(connection);
 
