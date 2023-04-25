@@ -3,6 +3,7 @@ package org.bot;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -34,7 +35,7 @@ public class Database {
      */
     public void courseLOAD(JSONArray courses) throws Exception {
         for (int i = 0; i < courses.length(); i++) {
-            if (courses.getJSONObject(i).has("name") && courses.getJSONObject(i).has("id")) {
+            if (hasNonNullValues(courses.getJSONObject(i), "name", "id")) {
                 courses_AL.add(new Course(courses.getJSONObject(i)));
             } else {
                 System.out.println("Course " + i + " is missing a field");
@@ -51,13 +52,21 @@ public class Database {
      */
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
-            if (assignments.getJSONObject(i).has("id") && assignments.getJSONObject(i).has("name")
-                    && assignments.getJSONObject(i).has("course_id") && assignments.getJSONObject(i).has("due_at")
-                    && !assignments.getJSONObject(i).isNull("due_at")) {
+            if (hasNonNullValues(assignments.getJSONObject(i), "name", "due_at", "course_id")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
         }
     }
+
+    private static boolean hasNonNullValues(JSONObject obj, String... keys) {
+        for (String key : keys) {
+            if (!obj.has(key) || obj.isNull(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }

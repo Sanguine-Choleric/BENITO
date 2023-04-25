@@ -1,8 +1,5 @@
 package org.bot;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +8,7 @@ import java.net.URI;
 import java.util.Objects;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Provides methods to interact with the Canvas API to retrieve information
