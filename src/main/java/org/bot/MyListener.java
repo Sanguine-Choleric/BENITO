@@ -1,7 +1,5 @@
 package org.bot;
 
-import java.util.ArrayList;
-
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -23,6 +21,7 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Pong!").queue();
             }
             
+            // Temp; UI guys redo this
             case "!courses" -> {
                 MessageChannel channel = event.getChannel();
 
@@ -40,7 +39,8 @@ public class MyListener extends ListenerAdapter {
                     channel.sendMessage(App.db.getCourses_AL().get(i).getCourseName()).queue();
                 }
             }
-            // Now grabs all assignments
+
+            // Temp; UI guys redo this
             case "!hw" -> {
                 MessageChannel channel = event.getChannel();
 
@@ -65,6 +65,7 @@ public class MyListener extends ListenerAdapter {
                 }
             }
 
+            // Temp; UI guys redo this
             case "!upcoming" -> {
                 MessageChannel channel = event.getChannel();
                 if (App.db.getCourses_AL().isEmpty()) {

@@ -44,7 +44,7 @@ public class CanvasGet {
 
             return new JSONArray(response);
         } else {
-            return null;
+            return new JSONArray();
         }
     }
 
