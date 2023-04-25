@@ -38,26 +38,8 @@ public class MyListener extends ListenerAdapter {
                 }
                 channel.sendMessage(messageBuilder(App.db.getCourses_AL(), "name")).queue();
             }
-
-            // Doesn't grab all hw
+            // Now grabs all assignments
             case "!hw" -> {
-                MessageChannel channel = event.getChannel();
-
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting Assignments").queue();
-                    try {
-                        System.out.println("Connecting for hw");
-                        // App.assignments = CanvasGet.getHW();
-                        App.db.assLOAD(CanvasGet.getHW());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                channel.sendMessage(messageBuilder(App.db.getAllAss_AL(), "name")).queue();
-            }
-
-            // Standard
-            case "!allhw" -> {
                 MessageChannel channel = event.getChannel();
 
                 if (App.db.getCourses_AL().isEmpty()) {

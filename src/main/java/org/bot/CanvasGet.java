@@ -62,21 +62,6 @@ public class CanvasGet {
     }
 
     /**
-     * Retrieves a JSONArray of all homework assignments for a specific course from
-     * the Canvas API using the "assignments" endpoint.
-     *
-     * @return A JSONArray of all homework assignments for a specific class from the
-     *         Canvas API
-     * @throws Exception If there is an error retrieving the homework assignments
-     *                   from the API
-     */
-    public static JSONArray getHW() throws Exception {
-        String url = "https://csus.instructure.com/api/v1/courses/" + 102203 + "/assignments";
-        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
-        return canvasAPIGetter(connection);
-    }
-
-    /**
      * Retrieves a JSONArray of all homework assignments for all enrolled courses.
      * <p>
      * MUST HAVE an already populated `App.courses` in order access assignments for each course.
