@@ -28,7 +28,7 @@ public class CanvasGet {
      * @throws IOException if an I/O error occurs while sending the request or
      *                     reading the response
      */
-    private static JSONArray canvasAPIGetter(HttpURLConnection connection) throws IOException {
+    protected static JSONArray canvasAPIGetter(HttpURLConnection connection) throws IOException {
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
 
@@ -87,18 +87,19 @@ public class CanvasGet {
      * @throws Exception If there is an error retrieving the homework assignments from the API
      */
     public static JSONArray getAllAssignments() throws Exception {
-        if (App.courses.isEmpty()) {
+        if (App.db.getCourses_AL().isEmpty()) {
             return new JSONArray();
         }
 
         JSONArray allAssignments = new JSONArray();
-        int[] courseIds = new int[App.courses.length()];
+        int[] courseIds = new int[App.db.getCourses_AL().size()];
 
         // Building list of course ids to use to build urls
         // Canvas only allows grabbing assignments from one course ata time
-        for (int i = 0; i < App.courses.length(); i++) {
-            JSONObject course = App.courses.getJSONObject(i);
-            courseIds[i] = course.getInt("id");
+        for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
+            // JSONObject course = App.courses.getJSONObject(i);
+            // courseIds[i] = course.getInt("id");
+            courseIds[i] = App.db.getCourses_AL().get(i).getCourseID();
         }
         for (int courseId : courseIds) {
             // TODO: Fix API response error - Some classes don't have a courseId?. Temp fix by filtering for large course IDs.

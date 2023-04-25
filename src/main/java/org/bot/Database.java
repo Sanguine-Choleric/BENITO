@@ -52,7 +52,8 @@ public class Database {
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
             if (assignments.getJSONObject(i).has("id") && assignments.getJSONObject(i).has("name")
-                    && assignments.getJSONObject(i).has("course_id") && assignments.getJSONObject(i).has("due_at")) {
+                    && assignments.getJSONObject(i).has("course_id") && assignments.getJSONObject(i).has("due_at")
+                    && !assignments.getJSONObject(i).isNull("due_at")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
