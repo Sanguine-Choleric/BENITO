@@ -27,23 +27,41 @@ public class MyListener extends ListenerAdapter {
             case "!classes" -> {
                 MessageChannel channel = event.getChannel();
 
-                if (App.courses.isEmpty()) {
+                if (App.db.getCourses_AL().isEmpty()) {
                     channel.sendMessage("Getting classes").queue();
                     try {
-                        App.courses = CanvasGet.getCourses();
+                        System.out.println("Connecting for classes");
+                        // App.allCourse_JSON = CanvasGet.getCourses(); //changed so this command can still work
+                        App.db.courseLOAD(CanvasGet.getCourses());
+
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
-                channel.sendMessage(messageBuilder(App.courses, "name")).queue();
+
+                for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
+                    // JSONObject course = App.allCourse_JSON.getJSONObject(i);
+
+                    // if (course.getInt("id") > 100000) {
+                    //     channel.sendMessage(course.getString("name")).queue();
+                    // }
+                    Course course = App.db.getCourses_AL().get(i);
+                    if (course.getCourseID() > 100000) {
+                        channel.sendMessage(course.getCourseName()).queue();
+                    }
+
+                }
             }
+            // Doesn't grab all hw
             case "!hw" -> {
                 MessageChannel channel = event.getChannel();
 
-                if (App.assignments.isEmpty()) {
+                if (App.db.getAllAss_AL().isEmpty()) {
                     channel.sendMessage("Getting Assignments").queue();
                     try {
-                        App.assignments = CanvasGet.getHW();
+                        System.out.println("Connecting for hw");
+                        // App.assignments = CanvasGet.getHW();
+                        App.db.assLOAD(CanvasGet.getHW());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -65,17 +83,12 @@ public class MyListener extends ListenerAdapter {
                     }
                 }
 
-                try {
-                    channel.sendMessage("Getting Assignments").queue();
-
-                    App.allAssignments = CanvasGet.getAllAssignments();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                for (int i = 0; i < App.db.getAllAss_AL().size(); i++) {
+                    // JSONObject assignment = App.assignments.getJSONObject(i);
+                    // channel.sendMessage(assignment.getString("name")).queue();
+                    Assignment assignment = App.db.getAllAss_AL().get(i);
+                    channel.sendMessage(assignment.getAssName()).queue();
                 }
-
-                // TODO: Need a better way of sending large messages
-                // Messaging all of App.allAssignments WILL hit rate limit
-                channel.sendMessage(messageBuilder(App.allAssignments, "name")).queue();
             }
 
             case "!upcoming" -> {

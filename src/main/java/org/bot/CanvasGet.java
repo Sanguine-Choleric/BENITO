@@ -10,19 +10,25 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Objects;
 
+import org.json.JSONArray;
+
 /**
- * Provides methods to interact with the Canvas API to retrieve information needed for functions that need them.
+ * Provides methods to interact with the Canvas API to retrieve information
+ * needed for functions that need them.
  */
 public class CanvasGet {
     /**
-     * Sends a GET request to the Canvas API using the specified HttpURLConnection object and returns
+     * Sends a GET request to the Canvas API using the specified HttpURLConnection
+     * object and returns
      * the response as a JSONArray.
      *
-     * @param connection the HttpURLConnection object to use for the request. Built from a String url.
+     * @param connection the HttpURLConnection object to use for the request. Built
+     *                   from a String url.
      * @return a JSONArray containing the response from the Canvas API
-     * @throws IOException if an I/O error occurs while sending the request or reading the response
+     * @throws IOException if an I/O error occurs while sending the request or
+     *                     reading the response
      */
-    public static JSONArray canvasAPIGetter(HttpURLConnection connection) throws IOException {
+    private static JSONArray canvasAPIGetter(HttpURLConnection connection) throws IOException {
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
 
@@ -42,12 +48,11 @@ public class CanvasGet {
         } else {
             return null;
         }
-
     }
 
-
     /**
-     * Retrieves a JSONArray of all courses from the Canvas API using the "courses" endpoint.
+     * Retrieves a JSONArray of all courses from the Canvas API using the "courses"
+     * endpoint.
      *
      * @return A JSONArray of all classes from the Canvas API
      * @throws Exception If there is an error retrieving the course from the API
@@ -59,10 +64,13 @@ public class CanvasGet {
     }
 
     /**
-     * Retrieves a JSONArray of all homework assignments for a specific course from the Canvas API using the "assignments" endpoint.
+     * Retrieves a JSONArray of all homework assignments for a specific course from
+     * the Canvas API using the "assignments" endpoint.
      *
-     * @return A JSONArray of all homework assignments for a specific class from the Canvas API
-     * @throws Exception If there is an error retrieving the homework assignments from the API
+     * @return A JSONArray of all homework assignments for a specific class from the
+     *         Canvas API
+     * @throws Exception If there is an error retrieving the homework assignments
+     *                   from the API
      */
     public static JSONArray getHW() throws Exception {
         String url = "https://csus.instructure.com/api/v1/courses/" + 102203 + "/assignments";

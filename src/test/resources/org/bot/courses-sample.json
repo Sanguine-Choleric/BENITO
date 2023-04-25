@@ -1,0 +1,363 @@
+[
+  {
+    "id": 90823,
+    "name": "CSC Undergraduate Student Resources",
+    "account_id": 36,
+    "uuid": "YhjlJ9SQzkq7oK6cuE1gMblUkxBQu7chWwTm1sud",
+    "start_at": "2022-03-09T05:31:06Z",
+    "grading_standard_id": null,
+    "is_public": false,
+    "created_at": "2021-12-06T21:13:17Z",
+    "course_code": "CSC Undergraduate Student Resources",
+    "default_view": "modules",
+    "root_account_id": 1,
+    "enrollment_term_id": 6,
+    "license": "private",
+    "grade_passback_setting": null,
+    "end_at": null,
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": false,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_YhjlJ9SQzkq7oK6cuE1gMblUkxBQu7chWwTm1sud.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": false
+  },
+  {
+    "id": 94436,
+    "access_restricted_by_date": true
+  },
+  {
+    "id": 102203,
+    "name": "CSC131 Computer Software Engr - SECTION 01",
+    "account_id": 36,
+    "uuid": "GwKrfy5LeAsMqAQl7YyZcQNiblvkAeIGztuhAGbQ",
+    "start_at": "2023-01-23T08:00:00Z",
+    "grading_standard_id": 11349,
+    "is_public": null,
+    "created_at": "2022-10-31T15:03:16Z",
+    "course_code": "CSC 131-01",
+    "default_view": "modules",
+    "root_account_id": 1,
+    "enrollment_term_id": 172,
+    "license": null,
+    "grade_passback_setting": null,
+    "end_at": "2023-05-31T07:00:00Z",
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": true,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_GwKrfy5LeAsMqAQl7YyZcQNiblvkAeIGztuhAGbQ.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": false
+  },
+  {
+    "id": 101063,
+    "name": "CSC134 Database Management Systems - SECTION 06",
+    "account_id": 36,
+    "uuid": "9zmp6OP7Q0cmUa1YqE4PEV9HZ3QS2IVSNob00Ea5",
+    "start_at": null,
+    "grading_standard_id": null,
+    "is_public": false,
+    "created_at": "2022-10-31T15:02:34Z",
+    "course_code": "CSC 134-06",
+    "default_view": "modules",
+    "root_account_id": 1,
+    "enrollment_term_id": 172,
+    "license": "private",
+    "grade_passback_setting": null,
+    "end_at": null,
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": false,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_9zmp6OP7Q0cmUa1YqE4PEV9HZ3QS2IVSNob00Ea5.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": false
+  },
+  {
+    "id": 105045,
+    "name": "CSC135 Computability and Formal Lang - SECTION 04",
+    "account_id": 36,
+    "uuid": "P2ZSnsFWpIcqasqkkK7a7tiB4SWH2hpdxks8tbng",
+    "start_at": "2023-01-23T08:00:00Z",
+    "grading_standard_id": null,
+    "is_public": false,
+    "created_at": "2022-11-23T14:03:08Z",
+    "course_code": "CSC 135-04",
+    "default_view": "syllabus",
+    "root_account_id": 1,
+    "enrollment_term_id": 172,
+    "license": "private",
+    "grade_passback_setting": null,
+    "end_at": "2023-05-19T07:00:00Z",
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": true,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_P2ZSnsFWpIcqasqkkK7a7tiB4SWH2hpdxks8tbng.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": false
+  },
+  {
+    "id": 102777,
+    "name": "CSC137 Computer Organization - SECTION 04",
+    "account_id": 36,
+    "uuid": "XFeVRF9Lzl3l2YoAVcQan6YlFEqiDSu53FUd9yOU",
+    "start_at": null,
+    "grading_standard_id": 0,
+    "is_public": false,
+    "created_at": "2022-10-31T15:03:40Z",
+    "course_code": "CSC 137-04",
+    "default_view": "syllabus",
+    "root_account_id": 1,
+    "enrollment_term_id": 172,
+    "license": "private",
+    "grade_passback_setting": null,
+    "end_at": null,
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": false,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_XFeVRF9Lzl3l2YoAVcQan6YlFEqiDSu53FUd9yOU.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": false
+  },
+  {
+    "id": 104531,
+    "name": "December 2022 WPJ Portfolio Submission (G-H)",
+    "account_id": 252,
+    "uuid": "85uQmR7bwKkaVVCBEIEPAc7rxTFBtT0dNavhmqvJ",
+    "start_at": null,
+    "grading_standard_id": null,
+    "is_public": false,
+    "created_at": "2022-11-14T21:09:31Z",
+    "course_code": "December 2022 WPJ Portfolio Submission (G-H)",
+    "default_view": "wiki",
+    "root_account_id": 1,
+    "enrollment_term_id": 6,
+    "license": "private",
+    "grade_passback_setting": null,
+    "end_at": null,
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": false,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_85uQmR7bwKkaVVCBEIEPAc7rxTFBtT0dNavhmqvJ.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": false
+  },
+  {
+    "id": 78368,
+    "name": "ECS Resource Center",
+    "account_id": 30,
+    "uuid": "wuyMogfXNKEEMPTja5IdRaeM0n3Jd89kuO0cl3Vv",
+    "start_at": "2021-05-29T00:44:51Z",
+    "grading_standard_id": null,
+    "is_public": false,
+    "created_at": "2021-02-24T18:47:05Z",
+    "course_code": "ECS Resource Center",
+    "default_view": "wiki",
+    "root_account_id": 1,
+    "enrollment_term_id": 6,
+    "license": "private",
+    "grade_passback_setting": null,
+    "end_at": null,
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": false,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_wuyMogfXNKEEMPTja5IdRaeM0n3Jd89kuO0cl3Vv.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": false,
+    "overridden_course_visibility": ""
+  },
+  {
+    "id": 97820,
+    "name": "Mandatory Safety Tutorial, Undergraduate (Fall 2022)",
+    "account_id": 279,
+    "uuid": "T8CYMRrYaHkCfy839JdY6FDWlIQ2ULGaPYHUWTnI",
+    "start_at": "2022-06-06T22:02:55Z",
+    "grading_standard_id": null,
+    "is_public": false,
+    "created_at": "2022-06-02T22:06:23Z",
+    "course_code": "Mandatory Safety Tutorial, Undergraduate",
+    "default_view": "wiki",
+    "root_account_id": 1,
+    "enrollment_term_id": 1,
+    "license": "private",
+    "grade_passback_setting": null,
+    "end_at": null,
+    "public_syllabus": false,
+    "public_syllabus_to_auth": false,
+    "storage_quota_mb": 2000,
+    "is_public_to_auth_users": false,
+    "homeroom_course": false,
+    "course_color": null,
+    "friendly_name": null,
+    "apply_assignment_group_weights": false,
+    "calendar": {
+      "ics": "https://csus.instructure.com/feeds/calendars/course_T8CYMRrYaHkCfy839JdY6FDWlIQ2ULGaPYHUWTnI.ics"
+    },
+    "time_zone": "America/Los_Angeles",
+    "blueprint": false,
+    "template": false,
+    "enrollments": [
+      {
+        "type": "student",
+        "role": "StudentEnrollment",
+        "role_id": 3,
+        "user_id": 161208,
+        "enrollment_state": "active",
+        "limit_privileges_to_course_section": false
+      }
+    ],
+    "hide_final_grades": false,
+    "workflow_state": "available",
+    "restrict_enrollments_to_course_dates": true
+  },
+  {
+    "id": 90828,
+    "access_restricted_by_date": true
+  }
+]
