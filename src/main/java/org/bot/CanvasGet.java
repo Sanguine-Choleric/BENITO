@@ -56,7 +56,7 @@ public class CanvasGet {
      * @throws Exception If there is an error retrieving the course from the API
      */
     public static JSONArray getCourses() throws Exception {
-        String url = "https://csus.instructure.com/api/v1/courses?per_page_1000";
+        String url = "https://csus.instructure.com/api/v1/courses?include[]=term&per_page_1000";
         HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         return canvasAPIGetter(connection);
     }

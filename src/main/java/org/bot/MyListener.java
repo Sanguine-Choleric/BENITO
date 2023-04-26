@@ -29,6 +29,7 @@ public class MyListener extends ListenerAdapter {
                     channel.sendMessage("Getting classes").queue();
                     try {
                         App.db.courseLOAD(CanvasGet.getCourses());
+
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

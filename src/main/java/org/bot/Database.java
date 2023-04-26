@@ -57,18 +57,22 @@ public class Database {
      * Populates allAss_AL Converts an input JSONArray into an ArrayList of
      * Assignment objects
      *
-     * @param courses the JSONArray containing Course objects
+     * @param assignments the JSONArray containing Course objects
      * @throws Exception if there is an error while loading the Course objects
      */
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
-            if (hasNonNullValues(assignments.getJSONObject(i), "name", "due_at", "course_id")) {
+            if (hasNonNullValues(assignments.getJSONObject(i), "id","name", "due_at", "course_id","has_submitted_submissions")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
         }
     }
+
+
+
+
 
     /**
      * Returns true if the given JSONObject has non-null values for all the given
