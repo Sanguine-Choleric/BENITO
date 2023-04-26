@@ -1,6 +1,8 @@
 package org.bot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,5 +57,35 @@ public class CanvasGetTest {
 
         // Assert that the actual response matches the expected response
         assertEquals(expectedResponse.toString(), actualResponse.toString());
+    }
+
+    // Testing that the method returns something. If this fails, you fucked up
+    // (or Canvas did).
+    @Test
+    void testGetCourses() throws Exception {
+        // Real courses
+        JSONArray courses = CanvasGet.getCourses();
+        assertNotNull(courses);
+        assertTrue(courses.length() > 0);
+    }
+
+    // Testing that the method fails on failed get. If this fails, you fucked up 
+    // (or Canvas did)
+    @Test
+    void testGetAllAssignmentsNoCourses() throws Exception {
+        App.db.clear();
+        JSONArray assignments = CanvasGet.getAllAssignments();
+        assertNotNull(assignments);
+        assertTrue(assignments.length() == 0);
+    }
+
+    // Testing that the method returns something. If this fails, you fucked up 
+    // (or Canvas did)
+    @Test
+    void testGetAllAssignments() throws Exception {
+        App.db.courseLOAD(CanvasGet.getCourses());
+        JSONArray assignments = CanvasGet.getAllAssignments();
+        assertNotNull(assignments);
+        assertTrue(assignments.length() > 0);
     }
 }

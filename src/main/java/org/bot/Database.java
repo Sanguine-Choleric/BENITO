@@ -17,6 +17,12 @@ public class Database {
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
 
+    public void clear() {
+        courses_AL.clear();
+        allAss_AL.clear();
+        upcomingAss_AL.clear();
+    }
+
     public ArrayList<Assignment> getUpcomingAss_AL() {
         return upcomingAss_AL;
     }
