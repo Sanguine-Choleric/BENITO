@@ -59,33 +59,36 @@ public class CanvasGetTest {
         assertEquals(expectedResponse.toString(), actualResponse.toString());
     }
 
+    /**
+     * Good tests for coverage, but not mocked, and are very slow (~10s). Uncomment if you want to run them.
+     */
     // Testing that the method returns something. If this fails, you fucked up
     // (or Canvas did).
-    @Test
-    void testGetCourses() throws Exception {
-        // Real courses
-        JSONArray courses = CanvasGet.getCourses();
-        assertNotNull(courses);
-        assertTrue(courses.length() > 0);
-    }
+    // @Test
+    // void testGetCourses() throws Exception {
+    //     // Real courses
+    //     JSONArray courses = CanvasGet.getCourses();
+    //     assertNotNull(courses);
+    //     assertTrue(courses.length() > 0);
+    // }
 
     // Testing that the method fails on failed get. If this fails, you fucked up 
     // (or Canvas did)
-    @Test
-    void testGetAllAssignmentsNoCourses() throws Exception {
-        App.db.clear();
-        JSONArray assignments = CanvasGet.getAllAssignments();
-        assertNotNull(assignments);
-        assertTrue(assignments.length() == 0);
-    }
+    // @Test
+    // void testGetAllAssignmentsNoCourses() throws Exception {
+    //     App.db.clear();
+    //     JSONArray assignments = CanvasGet.getAllAssignments();
+    //     assertNotNull(assignments);
+    //     assertTrue(assignments.length() == 0);
+    // }
 
     // Testing that the method returns something. If this fails, you fucked up 
     // (or Canvas did)
-    @Test
-    void testGetAllAssignments() throws Exception {
-        App.db.courseLOAD(CanvasGet.getCourses());
-        JSONArray assignments = CanvasGet.getAllAssignments();
-        assertNotNull(assignments);
-        assertTrue(assignments.length() > 0);
-    }
+    // @Test
+    // void testGetAllAssignments() throws Exception {
+    //     App.db.courseLOAD(CanvasGet.getCourses());
+    //     JSONArray assignments = CanvasGet.getAllAssignments();
+    //     assertNotNull(assignments);
+    //     assertTrue(assignments.length() > 0);
+    // }
 }

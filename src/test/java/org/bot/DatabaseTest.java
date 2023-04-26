@@ -1,6 +1,9 @@
 package org.bot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -156,6 +159,39 @@ public class DatabaseTest {
             assertEquals(2, db.getAllAss_AL().size(), "Database should refuse to load assignments with null fields");
         }
 
+    }
+
+    // Testing that getters and setters return the right type
+    @Test
+    void testGetCourses_AL() throws Exception {
+        db = new Database();
+        db.courseLOAD(jsonCourses);
+
+        assertTrue(db.getCourses_AL() instanceof ArrayList);
+    }
+
+    @Test
+    void testGetAllAss_AL() throws Exception {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertTrue(db.getAllAss_AL() instanceof ArrayList);
+    }
+
+    @Test
+    void testGetUpcomingAss_AL() throws Exception {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertTrue(db.getUpcomingAss_AL() instanceof ArrayList);
+    }
+
+    @Test
+    void testSetUpcomingAss_AL() throws Exception {
+        db = new Database();
+        db.setUpcomingAss_AL(new ArrayList<Assignment>());
+
+        assertTrue(db.getUpcomingAss_AL() instanceof ArrayList);
     }
 
 }
