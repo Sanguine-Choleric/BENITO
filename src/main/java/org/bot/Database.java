@@ -1,10 +1,10 @@
 package org.bot;
 
 import java.util.ArrayList;
-
+import java.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import java.util.Collections;
 /**
  * Stores all info retrieved from the Canvas API.
  * JSONObjects are stored as custom objects in ArrayLists.
@@ -16,7 +16,7 @@ public class Database {
     private ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
-
+    static LocalDate today = LocalDate.now();
     public void clear() {
         courses_AL.clear();
         allAss_AL.clear();
@@ -58,6 +58,34 @@ public class Database {
             }
         }
     }
+
+    /**
+     * upcomingDue method sorts through allASS_AL and only populates based on a certain set of requirements
+     * REQUIREMENTS for Assignment Object to enter upcomingAss_AL
+     * 1.must not be current or past time compared to local time
+     * @param assignments 
+     * @return returns an arraylist to populate the upcoming assignment category
+     * 
+     */
+    public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> assignments) {
+        ArrayList<Assignment> upcoming = new ArrayList<>();
+
+        // Filters out overdue assignments
+        for (Assignment a : assignments) {
+            if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
+                upcoming.add(a);
+            }
+        }
+
+        // Sorts assignments by due date
+        Collections.sort(upcoming, (a1, a2) -> a1.getDateFormat().compareTo(a2.getDateFormat()));
+
+        return upcoming;
+    }
+    
+
+
+
 
     /**
      * Populates allAss_AL Converts an input JSONArray into an ArrayList of
