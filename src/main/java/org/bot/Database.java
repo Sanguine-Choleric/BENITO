@@ -16,7 +16,14 @@ public class Database {
     private ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
+    private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
+    private ArrayList<Assignment> pastAss_AL = new ArrayList<>();
 
+    private ArrayList<Assignment> undatedAss_AL = new ArrayList<>();
+
+    public ArrayList<Assignment> getUndatedAss_AL() { return undatedAss_AL; }
+    public ArrayList<Assignment> getOverdueAss_AL() { return overdueAss_AL; }
+    public ArrayList<Assignment> getPastAss_AL() { return pastAss_AL; }
     public ArrayList<Assignment> getUpcomingAss_AL() {
         return upcomingAss_AL;
     }
@@ -24,6 +31,12 @@ public class Database {
     // Setter for populating upcomingAss_AL with upcoming assignments
     public void setUpcomingAss_AL(ArrayList<Assignment> upcomingAss_AL) {
         this.upcomingAss_AL = upcomingAss_AL;
+    }
+    public void setOverdueAss_AL(ArrayList<Assignment> overdueAss_AL)  {
+    }
+    public void setPastAss_AL(ArrayList<Assignment> pastAss_AL)  {
+    }
+    public void setUndatedAss_AL(ArrayList<Assignment> undatedAss_AL)  {
     }
 
     // Getter for courses_AL; returns an ArrayList of Course objects
