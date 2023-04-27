@@ -19,6 +19,8 @@ public class DueDateHandlerTest {
         assignment.put("name", "Test Assignment");
         assignment.put("due_at", "2021-04-20T23:59:00Z");
         assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
         assignments.add(new Assignment(assignment));
 
         assignment = new JSONObject();
@@ -26,6 +28,8 @@ public class DueDateHandlerTest {
         assignment.put("name", "Test Assignment 2");
         assignment.put("due_at", "9999-04-21T23:59:00Z");
         assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
         assignments.add(new Assignment(assignment));
 
         assignment = new JSONObject();
@@ -33,6 +37,8 @@ public class DueDateHandlerTest {
         assignment.put("name", "Test Assignment 3");
         assignment.put("due_at", "9999-04-22T23:59:00Z");
         assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
         assignments.add(new Assignment(assignment));
     }
 

@@ -37,6 +37,7 @@ public class DatabaseTest {
         jsonAssignment.put("name", "Assignment 1");
         jsonAssignment.put("due_at", "2023-04-23T06:59:59Z");
         jsonAssignment.put("course_id", 100);
+        jsonAssignment.put("has_submitted_submissions", true);
         jsonAssignment.put("description",
                 "This is an assignment, but this description shouldn't show up in assignment list.");
         jsonAssignments.put(jsonAssignment);
@@ -46,6 +47,7 @@ public class DatabaseTest {
         jsonAssignment.put("name", "Assignment 1");
         jsonAssignment.put("due_at", "2023-04-24T06:59:59Z");
         jsonAssignment.put("course_id", 101);
+        jsonAssignment.put("has_submitted_submissions", true);
         jsonAssignment.put("description",
                 "This is an assignment, but this description shouldn't show up in assignment list.");
         jsonAssignments.put(jsonAssignment);
@@ -131,7 +133,7 @@ public class DatabaseTest {
 
             assertEquals(0, db.getAllAss_AL().size());
         }
-        
+
         @Test
         void testAssLOADMissingField() throws Exception {
             db = new Database();
