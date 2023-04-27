@@ -20,7 +20,7 @@ public class MyListener extends ListenerAdapter {
                 MessageChannel channel = event.getChannel();
                 channel.sendMessage("Pong!").queue();
             }
-            
+
             // Temp; UI guys redo this
             case "!courses" -> {
                 MessageChannel channel = event.getChannel();
@@ -90,14 +90,49 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Upcoming Assignments").queue();
                 try {
-                    App.db.setUpcomingAss_AL(DueDateHandler.upcomingDue(App.db.getAllAss_AL()));
+                    App.db.setUpcomingAss_AL(Database.upcomingDue(App.db.getAllAss_AL()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                // channel.sendMessage(messageBuilder(App.db.getUpcomingAss_AL(), "name")).queue();
+                // channel.sendMessage(messageBuilder(App.db.getUpcomingAss_AL(),
+                // "name")).queue();
                 for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getUpcomingAss_AL().get(i).getAssName()).queue();
+                }
+            }
+
+            // Temp; UI guys redo this
+            case "!overdue" -> {
+                MessageChannel channel = event.getChannel();
+                if (App.db.getCourses_AL().isEmpty()) {
+                    channel.sendMessage("Getting Classes").queue();
+
+                    try {
+                        App.db.courseLOAD(CanvasGet.getCourses());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (App.db.getAllAss_AL().isEmpty()) {
+                    channel.sendMessage("Getting All Assignments").queue();
+
+                    try {
+                        App.db.assLOAD(CanvasGet.getAllAssignments());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                channel.sendMessage("Getting Overdue Assignments").queue();
+                try {
+                    App.db.setOverdueAss_AL(Database.overDue(App.db.getAllAss_AL()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                for (int i = 0; i < App.db.getOverdueAss_AL().size(); i++) {
+                    channel.sendMessage(App.db.getOverdueAss_AL().get(i).getAssName()).queue();
                 }
             }
         }

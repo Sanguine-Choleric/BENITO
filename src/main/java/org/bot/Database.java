@@ -14,10 +14,19 @@ import java.util.Collections;
 public class Database {
     // private JSONArray allCourse_JSON = new JSONArray();
     // private JSONArray allAss_JSON = new JSONArray();
+    static LocalDate today = LocalDate.now();
     private ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
-    static LocalDate today = LocalDate.now();
+    private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
+
+    public ArrayList<Assignment> getOverdueAss_AL() {
+        return overdueAss_AL;
+    }
+
+    public void setOverdueAss_AL(ArrayList<Assignment> overdueAss_AL) {
+        this.overdueAss_AL = overdueAss_AL;
+    }
 
     public void clear() {
         courses_AL.clear();
@@ -71,23 +80,45 @@ public class Database {
      * @return returns an arraylist to populate the upcoming assignment category
      * 
      */
-    public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> assignments) {
+    public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> upcoming = new ArrayList<>();
 
         // Filters out overdue assignments
-        for (Assignment a : assignments) {
+        for (Assignment a : allAssignments) {
             if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
                 upcoming.add(a);
             }
         }
 
-        // Sorts assignments by due date
+        // Sorts assignments by due date, closest to today first
         Collections.sort(upcoming, (a1, a2) -> a1.getDateFormat().compareTo(a2.getDateFormat()));
 
         return upcoming;
     }
 
-    // public
+    /**
+     * Filters out overdue assignments from the provided list of assignments and
+     * returns a sorted list of overdue assignments. Sorted by due date, closest to today first
+     * 
+     * @param allAssignments the list of all assignments
+     * @return a sorted list of overdue assignments
+     */
+
+    public static ArrayList<Assignment> overDue(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> overdue = new ArrayList<>();
+
+        // Filters out upcoming assignments
+        for (Assignment a : allAssignments) {
+            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == false) {
+                overdue.add(a);
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        Collections.sort(overdue, (a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+
+        return overdue;
+    }
 
     /**
      * Populates allAss_AL Converts an input JSONArray into an ArrayList of
