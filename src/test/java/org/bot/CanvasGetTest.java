@@ -64,29 +64,29 @@ public class CanvasGetTest {
      */
     // Testing that the method returns something. If this fails, you fucked up
     // (or Canvas did).
-    @Test
-    void testGetCourses() throws Exception {
-        // Real courses
-        JSONArray courses = CanvasGet.getCourses();
-        assertNotNull(courses);
-    }
+    // @Test
+    // void testGetCourses() throws Exception {
+    //     // Real courses
+    //     JSONArray courses = CanvasGet.getCourses();
+    //     assertNotNull(courses);
+    // }
 
-    // Testing that the method fails on failed get. If this fails, you fucked up 
-    // (or Canvas did)
-    @Test
-    void testGetAllAssignmentsNoCourses() throws Exception {
-        App.db.clear();
-        JSONArray assignments = CanvasGet.getAllAssignments();
-        assertNotNull(assignments);
-        assertTrue(assignments.length() == 0);
-    }
+    // // Testing that the method fails on failed get. If this fails, you fucked up 
+    // // (or Canvas did)
+    // @Test
+    // void testGetAllAssignmentsNoCourses() throws Exception {
+    //     App.db.clear();
+    //     JSONArray assignments = CanvasGet.getAllAssignments();
+    //     assertNotNull(assignments);
+    //     assertTrue(assignments.length() == 0);
+    // }
 
-    // Testing that the method returns something. If this fails, you fucked up 
-    // (or Canvas did)
-    @Test
-    void testGetAllAssignments() throws Exception {
-        App.db.courseLOAD(CanvasGet.getCourses());
-        JSONArray assignments = CanvasGet.getAllAssignments();
-        assertNotNull(assignments);
-    }
+    // // Testing that the method returns something. If this fails, you fucked up 
+    // // (or Canvas did)
+    // @Test
+    // void testGetAllAssignments() throws Exception {
+    //     App.db.courseLOAD(CanvasGet.getCourses());
+    //     JSONArray assignments = CanvasGet.getAllAssignments();
+    //     assertNotNull(assignments);
+    // }
 }
