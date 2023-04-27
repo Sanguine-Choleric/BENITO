@@ -66,4 +66,22 @@ public class DueDateHandlerTest {
         assertEquals(1, overdue.size(), "Only the one assignment in past and unsubmitted should appear");
         assertEquals("Test Overdue Assignment", overdue.get(0).getAssName(), "Test Overdue Assignment should be first");
     }
+
+    @Test
+    void testPastSubmitted() {
+        assignment = new JSONObject();
+        assignment.put("id", 100);
+        assignment.put("name", "Test Past Submitted Assignment");
+        assignment.put("due_at", "2021-04-19T23:59:00Z");
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        ArrayList<Assignment> pastSubmitted = Database.pastSubmitted(assignments);
+        assertEquals(2, pastSubmitted.size(), "2 should appear, the one in this test and the one in setup");
+        assertEquals("Test Assignment", pastSubmitted.get(0).getAssName(), "Test Assignment should be first");
+        assertEquals("Test Past Submitted Assignment", pastSubmitted.get(1).getAssName(),
+                "Test Past Submitted Assignment should be second");
+    }
 }

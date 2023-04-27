@@ -19,6 +19,15 @@ public class Database {
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
     private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
+    private ArrayList<Assignment> pastSubmittedAss_AL = new ArrayList<>();
+
+    public ArrayList<Assignment> getPastSubmittedAss_AL() {
+        return pastSubmittedAss_AL;
+    }
+
+    public void setPastSubmittedAss_AL(ArrayList<Assignment> pastSubmittedAss_AL) {
+        this.pastSubmittedAss_AL = pastSubmittedAss_AL;
+    }
 
     public ArrayList<Assignment> getOverdueAss_AL() {
         return overdueAss_AL;
@@ -120,6 +129,22 @@ public class Database {
         return overdue;
     }
 
+    public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> pastSubmitted = new ArrayList<>();
+
+        // Filters out upcoming assignments
+        for (Assignment a : allAssignments) {
+            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == true) {
+                pastSubmitted.add(a);
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        Collections.sort(pastSubmitted, (a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+
+        return pastSubmitted;
+    }
+
     /**
      * Populates allAss_AL Converts an input JSONArray into an ArrayList of
      * Assignment objects
@@ -155,5 +180,9 @@ public class Database {
             }
         }
         return true;
+    }
+
+    public static LocalDate getToday() {
+        return today;
     }
 }

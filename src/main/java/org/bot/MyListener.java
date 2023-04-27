@@ -135,6 +135,40 @@ public class MyListener extends ListenerAdapter {
                     channel.sendMessage(App.db.getOverdueAss_AL().get(i).getAssName()).queue();
                 }
             }
+
+            // Temp; UI guys redo this
+            case "!submitted" -> {
+                MessageChannel channel = event.getChannel();
+                if (App.db.getCourses_AL().isEmpty()) {
+                    channel.sendMessage("Getting Classes").queue();
+
+                    try {
+                        App.db.courseLOAD(CanvasGet.getCourses());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (App.db.getAllAss_AL().isEmpty()) {
+                    channel.sendMessage("Getting All Assignments").queue();
+
+                    try {
+                        App.db.assLOAD(CanvasGet.getAllAssignments());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                channel.sendMessage("Getting Submitted Assignments").queue();
+                try {
+                    App.db.setPastSubmittedAss_AL(Database.pastSubmitted(App.db.getAllAss_AL()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                for (int i = 0; i < App.db.getPastSubmittedAss_AL().size(); i++) {
+                    channel.sendMessage(App.db.getPastSubmittedAss_AL().get(i).getAssName()).queue();
+                }
+            }
         }
     }
 }
