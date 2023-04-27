@@ -1,10 +1,11 @@
 package org.bot;
 
-import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.util.Collections;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -91,6 +92,7 @@ public class Database {
      */
     public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> upcoming = new ArrayList<>();
+        today = LocalDateTime.now();
 
         // Filters out overdue assignments
         for (Assignment a : allAssignments) {
@@ -116,6 +118,7 @@ public class Database {
 
     public static ArrayList<Assignment> overDue(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> overdue = new ArrayList<>();
+        today = LocalDateTime.now();
 
         // Filters out upcoming assignments
         for (Assignment a : allAssignments) {
@@ -132,10 +135,11 @@ public class Database {
 
     public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> pastSubmitted = new ArrayList<>();
+        today = LocalDateTime.now();
 
-        // Filters out upcoming assignments
+        // Filters out past/submitted assignments
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == true) {
+            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited() == true) {
                 pastSubmitted.add(a);
             }
         }
