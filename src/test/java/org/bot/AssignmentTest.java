@@ -44,6 +44,6 @@ public class AssignmentTest {
 
     @Test
     void testGetDateFormat() {
-        assertEquals("2023-04-22", assignment.getDateFormat().toString(), "Testing date format getter");
+        assertEquals("2023-04-22T23:59:59", assignment.getDateFormat().toString(), "Testing date format getter");
     }
 }

@@ -1,7 +1,7 @@
 package org.bot;
 
 import java.util.ArrayList;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.Collections;
@@ -14,7 +14,7 @@ import java.util.Collections;
 public class Database {
     // private JSONArray allCourse_JSON = new JSONArray();
     // private JSONArray allAss_JSON = new JSONArray();
-    static LocalDate today = LocalDate.now();
+    static LocalDateTime today = LocalDateTime.now();
     private ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
@@ -107,7 +107,8 @@ public class Database {
 
     /**
      * Filters out overdue assignments from the provided list of assignments and
-     * returns a sorted list of overdue assignments. Sorted by due date, closest to today first
+     * returns a sorted list of overdue assignments. Sorted by due date, closest to
+     * today first
      * 
      * @param allAssignments the list of all assignments
      * @return a sorted list of overdue assignments
@@ -180,9 +181,5 @@ public class Database {
             }
         }
         return true;
-    }
-
-    public static LocalDate getToday() {
-        return today;
     }
 }
