@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DueDateHandlerTest {
+public class DatabaseProcessingTest {
     JSONObject assignment;
     ArrayList<Assignment> assignments = new ArrayList<>();
 
