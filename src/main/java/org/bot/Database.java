@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.Collections;
+
 /**
  * Stores all info retrieved from the Canvas API.
  * JSONObjects are stored as custom objects in ArrayLists.
@@ -17,6 +18,7 @@ public class Database {
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
     static LocalDate today = LocalDate.now();
+
     public void clear() {
         courses_AL.clear();
         allAss_AL.clear();
@@ -60,10 +62,12 @@ public class Database {
     }
 
     /**
-     * upcomingDue method sorts through allASS_AL and only populates based on a certain set of requirements
+     * upcomingDue method sorts through allASS_AL and only populates based on a
+     * certain set of requirements
      * REQUIREMENTS for Assignment Object to enter upcomingAss_AL
      * 1.must not be current or past time compared to local time
-     * @param assignments 
+     * 
+     * @param assignments
      * @return returns an arraylist to populate the upcoming assignment category
      * 
      */
@@ -82,10 +86,8 @@ public class Database {
 
         return upcoming;
     }
-    
 
-
-
+    // public
 
     /**
      * Populates allAss_AL Converts an input JSONArray into an ArrayList of
@@ -96,17 +98,14 @@ public class Database {
      */
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
-            if (hasNonNullValues(assignments.getJSONObject(i), "id","name", "due_at", "course_id","has_submitted_submissions")) {
+            if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "due_at", "course_id",
+                    "has_submitted_submissions")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
         }
     }
-
-
-
-
 
     /**
      * Returns true if the given JSONObject has non-null values for all the given

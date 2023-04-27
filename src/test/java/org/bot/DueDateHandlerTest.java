@@ -44,7 +44,7 @@ public class DueDateHandlerTest {
 
     @Test
     void testUpcomingDue() {
-        ArrayList<Assignment> upcoming = DueDateHandler.upcomingDue(assignments);
+        ArrayList<Assignment> upcoming = Database.upcomingDue(assignments);
         assertEquals(2, upcoming.size(), "Only the two assignments due in the future should be returned");
         assertEquals("Test Assignment 2", upcoming.get(0).getAssName(), "Test Assignment 2 should be first");
         assertEquals("Test Assignment 3", upcoming.get(1).getAssName(), "Test Assignment 3 should be second");
