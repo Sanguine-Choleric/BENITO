@@ -96,10 +96,10 @@ public class Database {
      * certain set of requirements
      * REQUIREMENTS for Assignment Object to enter upcomingAss_AL
      * 1.must not be current or past time compared to local time
-     *
-     * @param assignments
+     * 
+     * @param allAssignments
      * @return returns an arraylist to populate the upcoming assignment category
-     *
+     * 
      */
     public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> upcoming = new ArrayList<>();
@@ -122,7 +122,7 @@ public class Database {
      * Filters out overdue assignments from the provided list of assignments and
      * returns a sorted list of overdue assignments. Sorted by due date, closest to
      * today first
-     *
+     * 
      * @param allAssignments the list of all assignments
      * @return a sorted list of overdue assignments
      */
@@ -133,7 +133,7 @@ public class Database {
 
         // Filters out upcoming assignments
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmitted() == false) {
+            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == false) {
                 overdue.add(a);
             }
         }
@@ -160,7 +160,7 @@ public class Database {
 
         // Filters out past/submitted assignments
         for (Assignment a : allAssignments) {
-            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmitted() == true) {
+            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited() == true) {
                 pastSubmitted.add(a);
             }
         }
@@ -180,9 +180,17 @@ public class Database {
      */
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
-            if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "due_at", "course_id",
+            //ONLY VALUES THAT ALLOWED TO BE NULL IS due_at
+            //Adding due_at can have a null value which means its undated
+            if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "course_id",
                     "has_submitted_submissions")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
+                //TODO: Remove below before pull request
+                //This is the manual check to check for data.
+                System.out.println(i);
+                System.out.println(allAss_AL.get(i).getData());
+                System.out.println(assignments.getJSONObject(i));
+                System.out.println("------------------------------");
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
