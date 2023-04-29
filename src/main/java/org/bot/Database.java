@@ -1,9 +1,13 @@
 package org.bot;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import static org.bot.CanvasGet.getAllAssignments;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -13,12 +17,13 @@ import org.json.JSONObject;
 public class Database {
     // private JSONArray allCourse_JSON = new JSONArray();
     // private JSONArray allAss_JSON = new JSONArray();
+    static LocalDateTime today = LocalDateTime.now();
     private ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
     private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
     private ArrayList<Assignment> pastSubmittedAss_AL = new ArrayList<>();
-
+    private ArrayList<Assignment> undatedAss_AL = new ArrayList<>();
     public ArrayList<Assignment> getPastSubmittedAss_AL() {
         return pastSubmittedAss_AL;
     }
@@ -27,18 +32,21 @@ public class Database {
         this.pastSubmittedAss_AL = pastSubmittedAss_AL;
     }
 
+    public ArrayList<Assignment> getUndatedAss_AL() {
+        return undatedAss_AL;
+    }
+
+    public void setUndatedAss_AL(ArrayList<Assignment> undatedAss_AL) {
+        this.undatedAss_AL = undatedAss_AL;
+    }
+
+
     public ArrayList<Assignment> getOverdueAss_AL() {
         return overdueAss_AL;
     }
 
     public void setOverdueAss_AL(ArrayList<Assignment> overdueAss_AL) {
         this.overdueAss_AL = overdueAss_AL;
-    }
-
-    public void clear() {
-        courses_AL.clear();
-        allAss_AL.clear();
-        upcomingAss_AL.clear();
     }
 
     public void clear() {
@@ -125,7 +133,7 @@ public class Database {
 
         // Filters out upcoming assignments
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == false) {
+            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmitted() == false) {
                 overdue.add(a);
             }
         }
@@ -135,6 +143,16 @@ public class Database {
 
         return overdue;
     }
+    public static ArrayList<Assignment> undatedAssignments(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> undated = new ArrayList<>();
+        for (Assignment a : allAssignments) {
+            if (a.getDateFormat() == null) {
+                undated.add(a);
+            }
+        }
+
+        return undated;
+    }
 
     public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> pastSubmitted = new ArrayList<>();
@@ -142,7 +160,7 @@ public class Database {
 
         // Filters out past/submitted assignments
         for (Assignment a : allAssignments) {
-            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited() == true) {
+            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmitted() == true) {
                 pastSubmitted.add(a);
             }
         }

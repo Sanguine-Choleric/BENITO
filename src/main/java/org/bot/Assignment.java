@@ -46,5 +46,8 @@ public class Assignment {
         return assDateFormat;
     }
 
-    public boolean getHasBeenSubmited(){return has_submitted_submissions;}
+    public boolean getHasBeenSubmitted() {
+        return has_submitted_submissions;
+    }
+
 }
