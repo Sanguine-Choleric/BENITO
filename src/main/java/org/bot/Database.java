@@ -17,13 +17,30 @@ public class Database {
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
     private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
-    private ArrayList<Assignment> pastAss_AL = new ArrayList<>();
+    private ArrayList<Assignment> pastSubmittedAss_AL = new ArrayList<>();
 
-    private ArrayList<Assignment> undatedAss_AL = new ArrayList<>();
+    public ArrayList<Assignment> getPastSubmittedAss_AL() {
+        return pastSubmittedAss_AL;
+    }
 
-    public ArrayList<Assignment> getUndatedAss_AL() { return undatedAss_AL; }
-    public ArrayList<Assignment> getOverdueAss_AL() { return overdueAss_AL; }
-    public ArrayList<Assignment> getPastAss_AL() { return pastAss_AL; }
+    public void setPastSubmittedAss_AL(ArrayList<Assignment> pastSubmittedAss_AL) {
+        this.pastSubmittedAss_AL = pastSubmittedAss_AL;
+    }
+
+    public ArrayList<Assignment> getOverdueAss_AL() {
+        return overdueAss_AL;
+    }
+
+    public void setOverdueAss_AL(ArrayList<Assignment> overdueAss_AL) {
+        this.overdueAss_AL = overdueAss_AL;
+    }
+
+    public void clear() {
+        courses_AL.clear();
+        allAss_AL.clear();
+        upcomingAss_AL.clear();
+    }
+
     public ArrayList<Assignment> getUpcomingAss_AL() {
         return upcomingAss_AL;
     }
@@ -31,12 +48,6 @@ public class Database {
     // Setter for populating upcomingAss_AL with upcoming assignments
     public void setUpcomingAss_AL(ArrayList<Assignment> upcomingAss_AL) {
         this.upcomingAss_AL = upcomingAss_AL;
-    }
-    public void setOverdueAss_AL(ArrayList<Assignment> overdueAss_AL)  {
-    }
-    public void setPastAss_AL(ArrayList<Assignment> pastAss_AL)  {
-    }
-    public void setUndatedAss_AL(ArrayList<Assignment> undatedAss_AL)  {
     }
 
     // Getter for courses_AL; returns an ArrayList of Course objects
@@ -67,6 +78,76 @@ public class Database {
     }
 
     /**
+     * upcomingDue method sorts through allASS_AL and only populates based on a
+     * certain set of requirements
+     * REQUIREMENTS for Assignment Object to enter upcomingAss_AL
+     * 1.must not be current or past time compared to local time
+     *
+     * @param assignments
+     * @return returns an arraylist to populate the upcoming assignment category
+     *
+     */
+    public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> upcoming = new ArrayList<>();
+        today = LocalDateTime.now();
+
+        // Filters out overdue assignments
+        for (Assignment a : allAssignments) {
+            if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
+                upcoming.add(a);
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        Collections.sort(upcoming, (a1, a2) -> a1.getDateFormat().compareTo(a2.getDateFormat()));
+
+        return upcoming;
+    }
+
+    /**
+     * Filters out overdue assignments from the provided list of assignments and
+     * returns a sorted list of overdue assignments. Sorted by due date, closest to
+     * today first
+     *
+     * @param allAssignments the list of all assignments
+     * @return a sorted list of overdue assignments
+     */
+
+    public static ArrayList<Assignment> overDue(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> overdue = new ArrayList<>();
+        today = LocalDateTime.now();
+
+        // Filters out upcoming assignments
+        for (Assignment a : allAssignments) {
+            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == false) {
+                overdue.add(a);
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        Collections.sort(overdue, (a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+
+        return overdue;
+    }
+
+    public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> pastSubmitted = new ArrayList<>();
+        today = LocalDateTime.now();
+
+        // Filters out past/submitted assignments
+        for (Assignment a : allAssignments) {
+            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited() == true) {
+                pastSubmitted.add(a);
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        Collections.sort(pastSubmitted, (a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+
+        return pastSubmitted;
+    }
+
+    /**
      * Populates allAss_AL Converts an input JSONArray into an ArrayList of
      * Assignment objects
      *
@@ -75,17 +156,14 @@ public class Database {
      */
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
-            if (hasNonNullValues(assignments.getJSONObject(i), "id","name", "due_at", "course_id","has_submitted_submissions")) {
+            if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "due_at", "course_id",
+                    "has_submitted_submissions")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
         }
     }
-
-
-
-
 
     /**
      * Returns true if the given JSONObject has non-null values for all the given

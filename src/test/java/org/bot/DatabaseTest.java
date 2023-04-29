@@ -1,6 +1,9 @@
 package org.bot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,6 +40,7 @@ public class DatabaseTest {
         jsonAssignment.put("name", "Assignment 1");
         jsonAssignment.put("due_at", "2023-04-23T06:59:59Z");
         jsonAssignment.put("course_id", 100);
+        jsonAssignment.put("has_submitted_submissions", true);
         jsonAssignment.put("description",
                 "This is an assignment, but this description shouldn't show up in assignment list.");
         jsonAssignments.put(jsonAssignment);
@@ -46,6 +50,7 @@ public class DatabaseTest {
         jsonAssignment.put("name", "Assignment 1");
         jsonAssignment.put("due_at", "2023-04-24T06:59:59Z");
         jsonAssignment.put("course_id", 101);
+        jsonAssignment.put("has_submitted_submissions", true);
         jsonAssignment.put("description",
                 "This is an assignment, but this description shouldn't show up in assignment list.");
         jsonAssignments.put(jsonAssignment);
@@ -131,7 +136,7 @@ public class DatabaseTest {
 
             assertEquals(0, db.getAllAss_AL().size());
         }
-        
+
         @Test
         void testAssLOADMissingField() throws Exception {
             db = new Database();
@@ -156,6 +161,39 @@ public class DatabaseTest {
             assertEquals(2, db.getAllAss_AL().size(), "Database should refuse to load assignments with null fields");
         }
 
+    }
+
+    // Testing that getters and setters return the right type
+    @Test
+    void testGetCourses_AL() throws Exception {
+        db = new Database();
+        db.courseLOAD(jsonCourses);
+
+        assertTrue(db.getCourses_AL() instanceof ArrayList);
+    }
+
+    @Test
+    void testGetAllAss_AL() throws Exception {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertTrue(db.getAllAss_AL() instanceof ArrayList);
+    }
+
+    @Test
+    void testGetUpcomingAss_AL() throws Exception {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertTrue(db.getUpcomingAss_AL() instanceof ArrayList);
+    }
+
+    @Test
+    void testSetUpcomingAss_AL() throws Exception {
+        db = new Database();
+        db.setUpcomingAss_AL(new ArrayList<Assignment>());
+
+        assertTrue(db.getUpcomingAss_AL() instanceof ArrayList);
     }
 
 }
