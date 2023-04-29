@@ -41,6 +41,12 @@ public class Database {
         upcomingAss_AL.clear();
     }
 
+    public void clear() {
+        courses_AL.clear();
+        allAss_AL.clear();
+        upcomingAss_AL.clear();
+    }
+
     public ArrayList<Assignment> getUpcomingAss_AL() {
         return upcomingAss_AL;
     }
