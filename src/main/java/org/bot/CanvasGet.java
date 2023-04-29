@@ -91,13 +91,13 @@ public class CanvasGet {
                 int page = 1;
                 boolean moreAssignments = true;
                 while (moreAssignments) {
-                    String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments?per_page=200&page=" + page;
+                    String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments?per_page=50&page=" + page;
                     HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
                     JSONArray assignmentsSingleCourse = canvasAPIGetter(connection);
     
                     // Unpacking each JSONArray received from each url and
                     // Recombining into a single mega-JSONArray
-                    for (int i = 0; i < Objects.requireNonNull(assignmentsSingleCourse).length(); i++) {
+                    for (int i = 0; i < assignmentsSingleCourse.length(); i++) {
                         JSONObject assignment = assignmentsSingleCourse.getJSONObject(i);
                         allAssignments.put(assignment);
                     }

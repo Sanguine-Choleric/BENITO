@@ -86,7 +86,7 @@ public class Database {
      * REQUIREMENTS for Assignment Object to enter upcomingAss_AL
      * 1.must not be current or past time compared to local time
      * 
-     * @param assignments
+     * @param allAssignments
      * @return returns an arraylist to populate the upcoming assignment category
      * 
      */
@@ -159,9 +159,17 @@ public class Database {
      */
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
-            if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "due_at", "course_id",
+            //ONLY VALUES THAT ALLOWED TO BE NULL IS due_at
+            //Adding due_at can have a null value which means its undated
+            if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "course_id",
                     "has_submitted_submissions")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
+                //TODO: Remove below before pull request
+                //This is the manual check to check for data.
+                System.out.println(i);
+                System.out.println(allAss_AL.get(i).getData());
+                System.out.println(assignments.getJSONObject(i));
+                System.out.println("------------------------------");
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
