@@ -1,11 +1,11 @@
 package org.bot;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -42,6 +42,8 @@ public class Database {
         courses_AL.clear();
         allAss_AL.clear();
         upcomingAss_AL.clear();
+        overdueAss_AL.clear();
+        pastSubmittedAss_AL.clear();
     }
 
     public ArrayList<Assignment> getUpcomingAss_AL() {

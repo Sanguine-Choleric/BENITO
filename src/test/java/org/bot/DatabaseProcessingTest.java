@@ -1,12 +1,12 @@
 package org.bot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DatabaseProcessingTest {
     JSONObject assignment;
@@ -48,6 +48,19 @@ public class DatabaseProcessingTest {
         assertEquals(2, upcoming.size(), "Only the two assignments due in the future should be returned");
         assertEquals("Test Assignment 2", upcoming.get(0).getAssName(), "Test Assignment 2 should be first");
         assertEquals("Test Assignment 3", upcoming.get(1).getAssName(), "Test Assignment 3 should be second");
+
+        assignment.put("id", 300);
+        assignment.put("name", "Test Assignment null date");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        upcoming = Database.upcomingDue(assignments);
+        assertEquals(2, upcoming.size(), "Null date shouldn't appear");
+
+
     }
 
     @Test
@@ -65,6 +78,18 @@ public class DatabaseProcessingTest {
         ArrayList<Assignment> overdue = Database.overDue(assignments);
         assertEquals(1, overdue.size(), "Only the one assignment in past and unsubmitted should appear");
         assertEquals("Test Overdue Assignment", overdue.get(0).getAssName(), "Test Overdue Assignment should be first");
+
+        // Testing null date; none should exist in upComing loader
+        assignment.put("id", 300);
+        assignment.put("name", "Test Assignment null date");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        overdue = Database.overDue(assignments);
+        assertEquals(2, overdue.size(), "Null date shouldn't appear");
     }
 
     @Test
@@ -83,5 +108,18 @@ public class DatabaseProcessingTest {
         assertEquals("Test Assignment", pastSubmitted.get(0).getAssName(), "Test Assignment should be first");
         assertEquals("Test Past Submitted Assignment", pastSubmitted.get(1).getAssName(),
                 "Test Past Submitted Assignment should be second");
+
+
+        // Testing null date; none should exist in pastSubmitted loader
+        assignment.put("id", 300);
+        assignment.put("name", "Test Assignment null date");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        pastSubmitted = Database.pastSubmitted(assignments);
+        assertEquals(2, pastSubmitted.size(), "Null date shouldn't appear");
     }
 }

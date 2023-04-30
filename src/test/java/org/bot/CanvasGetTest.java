@@ -1,10 +1,8 @@
 package org.bot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.json.JSONArray;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,8 +10,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 
-import org.json.JSONArray;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CanvasGetTest {
 
@@ -64,29 +64,29 @@ public class CanvasGetTest {
      */
     // Testing that the method returns something. If this fails, you fucked up
     // (or Canvas did).
-    // @Test
-    // void testGetCourses() throws Exception {
-    //     // Real courses
-    //     JSONArray courses = CanvasGet.getCourses();
-    //     assertNotNull(courses);
-    // }
+    @Disabled
+    void testGetCourses() throws Exception {
+        // Real courses
+        JSONArray courses = CanvasGet.getCourses();
+        assertNotNull(courses);
+    }
 
-    // // Testing that the method fails on failed get. If this fails, you fucked up 
-    // // (or Canvas did)
-    // @Test
-    // void testGetAllAssignmentsNoCourses() throws Exception {
-    //     App.db.clear();
-    //     JSONArray assignments = CanvasGet.getAllAssignments();
-    //     assertNotNull(assignments);
-    //     assertTrue(assignments.length() == 0);
-    // }
+    // Testing that the method fails on failed get. If this fails, you fucked up
+    // (or Canvas did)
+    @Disabled
+    void testGetAllAssignmentsNoCourses() throws Exception {
+        App.db.clear();
+        JSONArray assignments = CanvasGet.getAllAssignments();
+        assertNotNull(assignments);
+        assertEquals(0, assignments.length());
+    }
 
-    // // Testing that the method returns something. If this fails, you fucked up 
-    // // (or Canvas did)
-    // @Test
-    // void testGetAllAssignments() throws Exception {
-    //     App.db.courseLOAD(CanvasGet.getCourses());
-    //     JSONArray assignments = CanvasGet.getAllAssignments();
-    //     assertNotNull(assignments);
-    // }
+    // Testing that the method returns something. If this fails, you fucked up
+    // (or Canvas did)
+    @Disabled
+    void testGetAllAssignments() throws Exception {
+        App.db.courseLOAD(CanvasGet.getCourses());
+        JSONArray assignments = CanvasGet.getAllAssignments();
+        assertNotNull(assignments);
+    }
 }

@@ -1,15 +1,14 @@
 package org.bot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseTest {
     JSONArray jsonCourses = new JSONArray();
@@ -54,6 +53,53 @@ public class DatabaseTest {
         jsonAssignment.put("description",
                 "This is an assignment, but this description shouldn't show up in assignment list.");
         jsonAssignments.put(jsonAssignment);
+    }
+
+    @Test
+    void getPastSubmittedAss_AL() throws Exception {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertNotNull(db.getPastSubmittedAss_AL());
+    }
+
+    @Test
+    void setPastSubmittedAss_AL() {
+        db = new Database();
+        db.setPastSubmittedAss_AL(new ArrayList<>());
+
+        assertNotNull(db.getPastSubmittedAss_AL());
+    }
+
+    @Test
+    void getOverdueAss_AL() throws Exception {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertNotNull(db.getOverdueAss_AL());
+    }
+
+    @Test
+    void setOverdueAss_AL() {
+        db = new Database();
+        db.setOverdueAss_AL(new ArrayList<>());
+
+        assertNotNull(db.getOverdueAss_AL());
+    }
+
+    @Test
+    void clear() throws Exception {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+        db.setOverdueAss_AL(Database.overDue(db.getAllAss_AL()));
+        db.setUpcomingAss_AL(Database.upcomingDue(db.getAllAss_AL()));
+        db.setPastSubmittedAss_AL(Database.pastSubmitted(db.getAllAss_AL()));
+
+        db.clear();
+        assertEquals(0, db.getAllAss_AL().size());
+        assertEquals(0, db.getOverdueAss_AL().size());
+        assertEquals(0, db.getUpcomingAss_AL().size());
+        assertEquals(0, db.getPastSubmittedAss_AL().size());
     }
 
     @Nested
