@@ -14,7 +14,6 @@ public class App {
         // Pre-populating database
         System.out.println("Populating Courses");
         db.courseLOAD(CanvasGet.getCourses());
-        System.out.println(CanvasGet.getCourses());
         System.out.println("Populating Assignments");
         db.assLOAD(CanvasGet.getAllAssignments());
         System.out.println("Bot is ready");

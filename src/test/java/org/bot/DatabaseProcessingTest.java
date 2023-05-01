@@ -14,6 +14,8 @@ public class DatabaseProcessingTest {
 
     @BeforeEach
     void setUp() {
+//      Assignment 1
+//      In the Past and submitted
         assignment = new JSONObject();
         assignment.put("id", 100);
         assignment.put("name", "Test Assignment");
@@ -22,7 +24,8 @@ public class DatabaseProcessingTest {
         assignment.put("has_submitted_submissions", true);
 
         assignments.add(new Assignment(assignment));
-
+//      Assignment 2
+//      In the Future and submitted
         assignment = new JSONObject();
         assignment.put("id", 200);
         assignment.put("name", "Test Assignment 2");
@@ -31,7 +34,8 @@ public class DatabaseProcessingTest {
         assignment.put("has_submitted_submissions", true);
 
         assignments.add(new Assignment(assignment));
-
+//      Assignment 2
+//      In the future and submitted
         assignment = new JSONObject();
         assignment.put("id", 300);
         assignment.put("name", "Test Assignment 3");
@@ -49,6 +53,7 @@ public class DatabaseProcessingTest {
         assertEquals("Test Assignment 2", upcoming.get(0).getAssName(), "Test Assignment 2 should be first");
         assertEquals("Test Assignment 3", upcoming.get(1).getAssName(), "Test Assignment 3 should be second");
 
+        //null date unit test
         assignment.put("id", 300);
         assignment.put("name", "Test Assignment null date");
         assignment.put("due_at", JSONObject.NULL);
@@ -65,7 +70,7 @@ public class DatabaseProcessingTest {
 
     @Test
     void testOverDue() {
-
+        //not submitted and in the Past
         assignment = new JSONObject();
         assignment.put("id", 100);
         assignment.put("name", "Test Overdue Assignment");
@@ -89,11 +94,12 @@ public class DatabaseProcessingTest {
         assignments.add(new Assignment(assignment));
 
         overdue = Database.overDue(assignments);
-        assertEquals(2, overdue.size(), "Null date shouldn't appear");
+        assertEquals(1, overdue.size(), "Null date shouldn't appear");
     }
 
     @Test
     void testPastSubmitted() {
+        //in the past and submitted
         assignment = new JSONObject();
         assignment.put("id", 100);
         assignment.put("name", "Test Past Submitted Assignment");

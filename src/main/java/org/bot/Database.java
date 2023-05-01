@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -16,7 +17,7 @@ public class Database {
     // private JSONArray allCourse_JSON = new JSONArray();
     // private JSONArray allAss_JSON = new JSONArray();
     static LocalDateTime today = LocalDateTime.now();
-    private ArrayList<Course> courses_AL = new ArrayList<>();
+    public ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
     private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
@@ -74,11 +75,17 @@ public class Database {
      */
     public void courseLOAD(JSONArray courses) throws Exception {
         for (int i = 0; i < courses.length(); i++) {
-            if (hasNonNullValues(courses.getJSONObject(i), "name", "id")) {
-                courses_AL.add(new Course(courses.getJSONObject(i)));
-            } else {
-                System.out.println("Course " + i + " is missing a field");
-            }
+
+
+                if (hasNonNullValues(courses.getJSONObject(i), "name", "id")) {
+                    courses_AL.add(new Course(courses.getJSONObject(i)));
+                    System.out.println("Course "+ i + " was added");
+                    System.out.println(courses.getJSONObject(i));//This is for debugging Purposes
+                } else {
+                    System.out.println("Course " + i + " is missing a field");
+                    System.out.println(courses.getJSONObject(i));//This is for debugging Purposes
+                }
+
         }
     }
 
@@ -98,14 +105,15 @@ public class Database {
 
         // Filters out overdue assignments
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
-                upcoming.add(a);
+            if(a.getAssDate()!="null") {
+                if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
+                    upcoming.add(a);
+                }
             }
         }
 
         // Sorts assignments by due date, closest to today first
         Collections.sort(upcoming, (a1, a2) -> a1.getDateFormat().compareTo(a2.getDateFormat()));
-
         return upcoming;
     }
 
@@ -124,8 +132,10 @@ public class Database {
 
         // Filters out upcoming assignments
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == false) {
-                overdue.add(a);
+            if(!Objects.equals(a.getAssDate(), "null")) {
+                if (a.getDateFormat().isBefore(today) && a.getHasBeenSubmited() == false) {
+                    overdue.add(a);
+                }
             }
         }
 
@@ -141,8 +151,10 @@ public class Database {
 
         // Filters out past/submitted assignments
         for (Assignment a : allAssignments) {
-            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited() == true) {
-                pastSubmitted.add(a);
+            if(a.getAssDate()!="null"){
+                if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited() == true) {
+                    pastSubmitted.add(a);
+                }
             }
         }
 
@@ -166,12 +178,15 @@ public class Database {
             if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "course_id",
                     "has_submitted_submissions")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
+
                 //TODO: Remove below before pull request
-                //This is the manual check to check for data.
+                //This is the manual check to check for data----------------------------------
                 System.out.println(i);
                 System.out.println(allAss_AL.get(i).getData());
                 System.out.println(assignments.getJSONObject(i));
                 System.out.println("------------------------------");
+                //End of Debugging checks-----------------------------------------------------
+
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
