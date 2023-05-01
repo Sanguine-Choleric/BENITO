@@ -1,13 +1,11 @@
 package org.bot;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static org.bot.CanvasGet.getAllAssignments;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -53,6 +51,9 @@ public class Database {
         courses_AL.clear();
         allAss_AL.clear();
         upcomingAss_AL.clear();
+        overdueAss_AL.clear();
+        pastSubmittedAss_AL.clear();
+        undatedAss_AL.clear();
     }
 
     public ArrayList<Assignment> getUpcomingAss_AL() {
@@ -196,8 +197,6 @@ public class Database {
             }
         }
     }
-
-
 
     /**
      * Returns true if the given JSONObject has non-null values for all the given
