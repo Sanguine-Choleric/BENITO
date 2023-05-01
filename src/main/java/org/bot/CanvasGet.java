@@ -1,14 +1,13 @@
 package org.bot;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.Objects;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Provides methods to interact with the Canvas API to retrieve information
@@ -56,7 +55,7 @@ public class CanvasGet {
      * @throws Exception If there is an error retrieving the course from the API
      */
     public static JSONArray getCourses() throws Exception {
-        String url = "https://csus.instructure.com/api/v1/courses?per_page_1000";
+        String url = "https://csus.instructure.com/api/v1/courses?include.per_page_1000&enrollment_state=active&enrollment_role_id=3";
         HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         return canvasAPIGetter(connection);
     }
@@ -91,13 +90,13 @@ public class CanvasGet {
                 int page = 1;
                 boolean moreAssignments = true;
                 while (moreAssignments) {
-                    String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments?per_page=200&page=" + page;
+                    String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments?per_page=50&page=" + page;
                     HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
                     JSONArray assignmentsSingleCourse = canvasAPIGetter(connection);
     
                     // Unpacking each JSONArray received from each url and
                     // Recombining into a single mega-JSONArray
-                    for (int i = 0; i < Objects.requireNonNull(assignmentsSingleCourse).length(); i++) {
+                    for (int i = 0; i < assignmentsSingleCourse.length(); i++) {
                         JSONObject assignment = assignmentsSingleCourse.getJSONObject(i);
                         allAssignments.put(assignment);
                     }
