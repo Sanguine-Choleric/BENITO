@@ -22,7 +22,7 @@ public class Database {
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
     private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
     private ArrayList<Assignment> pastSubmittedAss_AL = new ArrayList<>();
-
+    private ArrayList<Assignment> undatedAss_AL = new ArrayList<>();
     public ArrayList<Assignment> getPastSubmittedAss_AL() {
         return pastSubmittedAss_AL;
     }
@@ -30,6 +30,15 @@ public class Database {
     public void setPastSubmittedAss_AL(ArrayList<Assignment> pastSubmittedAss_AL) {
         this.pastSubmittedAss_AL = pastSubmittedAss_AL;
     }
+
+    public ArrayList<Assignment> getUndatedAss_AL() {
+        return undatedAss_AL;
+    }
+
+    public void setUndatedAss_AL(ArrayList<Assignment> undatedAss_AL) {
+        this.undatedAss_AL = undatedAss_AL;
+    }
+
 
     public ArrayList<Assignment> getOverdueAss_AL() {
         return overdueAss_AL;
@@ -45,6 +54,7 @@ public class Database {
         upcomingAss_AL.clear();
         overdueAss_AL.clear();
         pastSubmittedAss_AL.clear();
+        undatedAss_AL.clear();
     }
 
     public ArrayList<Assignment> getUpcomingAss_AL() {
@@ -143,6 +153,16 @@ public class Database {
         Collections.sort(overdue, (a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
 
         return overdue;
+    }
+    public static ArrayList<Assignment> undatedAssignments(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> undated = new ArrayList<>();
+        for (Assignment a : allAssignments) {
+            if (a.getDateFormat() == null) {
+                undated.add(a);
+            }
+        }
+
+        return undated;
     }
 
     public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
