@@ -95,8 +95,6 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                // channel.sendMessage(messageBuilder(App.db.getUpcomingAss_AL(),
-                // "name")).queue();
                 for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getUpcomingAss_AL().get(i).getAssName()).queue();
                 }
