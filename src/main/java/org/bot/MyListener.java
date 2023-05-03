@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.ArrayList;
+
 public class MyListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -95,9 +97,15 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
-                    channel.sendMessage(App.db.getUpcomingAss_AL().get(i).getAssName()).queue();
+//                for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
+//                    channel.sendMessage(App.db.getUpcomingAss_AL().get(i).getAssName()).queue();
+//                }
+
+                ArrayList<String> upcoming = messageBuilder.convert(App.db.getUpcomingAss_AL());
+                for (String s : upcoming) {
+                    channel.sendMessage(s).queue();
                 }
+
             }
 
             // Temp; UI guys redo this
