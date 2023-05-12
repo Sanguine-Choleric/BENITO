@@ -136,6 +136,22 @@ public class DatabaseTest {
         assertNotNull(db.getUpcomingAss_AL());
     }
 
+    @Test
+    void getUndatedAss_AL() {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertNotNull(db.getUndatedAss_AL());
+    }
+
+    @Test
+    void setUndatedAss_AL() {
+        db = new Database();
+        db.setUndatedAss_AL(new ArrayList<>());
+
+        assertNotNull(db.getUndatedAss_AL());
+    }
+
     @Nested
     class courseLOADTests {
 

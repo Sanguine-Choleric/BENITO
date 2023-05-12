@@ -128,4 +128,20 @@ public class DatabaseProcessingTest {
         pastSubmitted = Database.pastSubmitted(assignments);
         assertEquals(2, pastSubmitted.size(), "Null date shouldn't appear");
     }
+
+    @Test
+    void undatedAssignments() {
+        assignment = new JSONObject();
+        assignment.put("id", 100);
+        assignment.put("name", "Test Null Date Assignment");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        ArrayList<Assignment> undated = Database.undatedAssignments(assignments);
+        assertEquals(1, undated.size(), "Only the one assignment with null date should appear");
+
+    }
 }

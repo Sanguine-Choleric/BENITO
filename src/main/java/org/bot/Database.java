@@ -135,7 +135,7 @@ public class Database {
         // Filters out upcoming assignments
         for (Assignment a : allAssignments) {
             if (!Objects.equals(a.getAssDate(), "null")) {
-                if (a.getDateFormat().isBefore(today) && !a.getHasBeenSubmited()) {
+                if (a.getDateFormat().isBefore(today) && !a.getHasBeenSubmitted()) {
                     overdue.add(a);
                 }
             }
@@ -165,7 +165,7 @@ public class Database {
         // Filters out past/submitted assignments
         for (Assignment a : allAssignments) {
             if (!Objects.equals(a.getAssDate(), "null")) {
-                if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited()) {
+                if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmitted()) {
                     pastSubmitted.add(a);
                 }
             }
