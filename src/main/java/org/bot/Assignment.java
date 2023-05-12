@@ -52,11 +52,7 @@ public class Assignment {
         return assDateFormat;
     }
 
-    public boolean getHasBeenSubmited() {
+    public boolean getHasBeenSubmitted() {
         return has_submitted_submissions;
-    }
-
-    public String getData() {
-        return getAssName() + getAssDate() + getHasBeenSubmited() + getAssID() + getDateFormat() + getCourseID();
     }
 }

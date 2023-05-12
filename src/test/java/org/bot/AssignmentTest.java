@@ -4,8 +4,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AssignmentTest {
     JSONObject jsonAssignment = new JSONObject();
@@ -60,5 +59,19 @@ public class AssignmentTest {
         assertEquals("null", assignment.getAssDate());
         assertNull(assignment.getDateFormat(), "Testing date format getter with null date");
 
+    }
+
+    @Test
+    void getHasBeenSubmitted() {
+        // No submission
+        jsonAssignment = new JSONObject();
+        jsonAssignment.put("course_id", 100);
+        jsonAssignment.put("id", 100);
+        jsonAssignment.put("name", "Assignment 1");
+        jsonAssignment.put("has_submitted_submissions", false);
+        jsonAssignment.put("due_at", "2023-04-23T06:59:59Z");
+        assignment = new Assignment(jsonAssignment);
+
+        assertFalse(assignment.getHasBeenSubmitted(), "Testing hasBeenSubmitted getter with no submission");
     }
 }
