@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
 
+// TODO: messageBuilder integration for all commands
+
 public class MyListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -204,6 +206,7 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
+                // TODO: print support for undated assignments
                 for (int i = 0; i < App.db.getUndatedAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getUndatedAss_AL().get(i).getAssName()).queue();
                 }
