@@ -84,7 +84,7 @@ public class CanvasGet {
     
         for (int courseId : courseIds) {
             // TODO: Fix API response error - Some classes don't have a courseId?. Temp fix by filtering for large course IDs.
-            if (courseId > 100000) {
+//            if (courseId > 100000) {
 
                 // Pagination fix - Grabs assignments by page until nothing is returned
                 int page = 1;
@@ -108,7 +108,7 @@ public class CanvasGet {
                         page++;
                     }
                 }
-            }
+//            }
         }
     
         return allAssignments;
