@@ -22,8 +22,32 @@ class MessageBuilderTest {
 
     }
 
+    // Test for courses
     @Test
-    void convert() {
+    void convert_courses() {
+        // Initializing test setup
+        // Adds two courses
+        App.db = new Database();
+        jsonCourses = new JSONArray();
+        jsonCourse = new JSONObject();
+        jsonCourse.put("id", 100);
+        jsonCourse.put("name", "Course 1");
+        jsonCourses.put(jsonCourse);
+        jsonCourse = new JSONObject();
+        jsonCourse.put("id", 101);
+        jsonCourse.put("name", "Course 2");
+        jsonCourses.put(jsonCourse);
+        App.db.courseLOAD(jsonCourses);
+
+        // Test starts here
+        ArrayList<String> s = messageBuilder.convert(App.db.getCourses_AL());
+        assertEquals("```Course 1\n" +
+                "Course 2```", s.get(0));
+    }
+
+    // Test for assignments
+    @Test
+    void convert_assignments() {
         App.db = new Database();
 
         // Regular list of courses
@@ -79,14 +103,15 @@ class MessageBuilderTest {
 
         String s = messageBuilder.convert(App.db.getAllAss_AL()).get(0);
         assertEquals("""
-                `04/22 23:59 | CSC101  |` Assignment 1
-                `00/00 00:00 | CSC101  |` Assignment 2
-                `00/00 00:00 | CSC101  |` Assignment 3 with a very long name that should be truncated and have three ...
-                `00/00 00:00 |         |` Assignment 4""", s);
+                ```04/22 23:59 | CSC101  | Assignment 1
+                00/00 00:00 | CSC101  | Assignment 2
+                00/00 00:00 | CSC101  | Assignment 3 with a very long name that should be truncated and have three ...
+                00/00 00:00 |         | Assignment 4```""", s);
     }
 
+    // Testing for large number of assignments
     @Test
-    void convert_large() {
+    void convert_assignments_large() {
         // Initializing blank database with single course
         App.db = new Database();
         jsonCourses = new JSONArray();
@@ -118,6 +143,15 @@ class MessageBuilderTest {
         for (String s : sArr) {
             assertTrue(s.length() < 2000);
         }
+    }
 
+    // Bad object test
+    @Test
+    void convert_else() {
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(new Object());
+        ArrayList<String> s = messageBuilder.convert(objects);
+
+        assertEquals("```Error: objectToString() called on non-Course, non-Assignment object```", s.get(0));
     }
 }

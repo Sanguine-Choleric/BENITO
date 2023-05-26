@@ -8,26 +8,25 @@ import java.util.ArrayList;
 
 public class messageBuilder {
 
-
     /**
      * Converts an arraylist of assignments into pretty strings. Works with Discord's 2000-character limit.
      *
-     * @param assignments ArrayList of assignments to convert to a string
+     * @param objects ArrayList of assignments to convert to a string
      * @return ArrayList of strings, each of which is a message to be sent to Discord
      */
-    public static ArrayList<String> convert(ArrayList<Assignment> assignments) {
+    public static ArrayList<String> convert(ArrayList<?> objects) {
         ArrayList<String> strings = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         int charCount = 0;
 
         // I am the way into the city of woe
-        for (Assignment assignment : assignments) {
+        for (Object object : objects) {
 
             // I am the way into eternal pain
-            String assignmentString = assignmentToString(assignment);
+            String objectString = objectToString(object);
 
             // I am the way to go among the lost
-            if (charCount + assignmentString.length() + 1 > 2000) {
+            if (charCount + objectString.length() + 1 > 2000) {
 
                 // Justice caused my high architect to move
                 strings.add(sb.toString());
@@ -44,24 +43,38 @@ public class messageBuilder {
             }
 
             // Before me there were no created things
-            sb.append(assignmentString);
-            charCount += assignmentString.length();
+            sb.append(objectString);
+            charCount += objectString.length();
         }
 
         // But those that last forever - as do I
         if (sb.length() > 0) {
-            strings.add(sb.toString());
+            strings.add("```" + sb + "```");
         }
 
         // Abandon all hope, ye who enter here
         return strings;
     }
 
+    private static String objectToString(Object object) {
+        if (object instanceof Course) {
+            return courseToString((Course) object);
+        } else if (object instanceof Assignment) {
+            return assignmentToString((Assignment) object);
+        } else {
+            return "Error: objectToString() called on non-Course, non-Assignment object";
+        }
+    }
+
+    private static String courseToString(Course course) {
+        return String.format("%s", course.getCourseName());
+    }
+
     private static String assignmentToString(Assignment assignment) {
         String dueAt = formatDueDate(assignment.getDateFormat());
         String courseName = formatCourseName(assignment.getCourseID());
         String name = formatAssignmentName(assignment.getAssName());
-        return String.format("`%s | %s |` %s", dueAt, courseName, name);
+        return String.format("%s | %s | %s", dueAt, courseName, name);
     }
 
     private static String formatDueDate(LocalDateTime dueDate) {
