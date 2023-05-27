@@ -16,16 +16,14 @@ public class MyListener extends ListenerAdapter {
 
         Message message = event.getMessage();
         String content = message.getContentRaw();
+        MessageChannel channel = event.getChannel();
 
         switch (content) {
             case "!ping" -> {
-                MessageChannel channel = event.getChannel();
                 channel.sendMessage("Pong!").queue();
             }
 
             case "!help" -> {
-                MessageChannel channel = event.getChannel();
-
                 ArrayList<String[]> commandList = new ArrayList<>();
                 commandList.add(new String[]{"!ping", "Pong!"});
                 commandList.add(new String[]{"!help", "This message"});
@@ -47,55 +45,27 @@ public class MyListener extends ListenerAdapter {
                     formattedCommands.append(formattedCommand);
                 }
 
-                String outputString = String.format("```\n%s\n```", formattedCommands.toString());
+                String outputString = String.format("```\n%s\n```", formattedCommands);
                 channel.sendMessage(outputString).queue();
             }
 
             // Temp; UI guys redo this
             case "!courses" -> {
-                MessageChannel channel = event.getChannel();
-
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting classes").queue();
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-//                // channel.sendMessage(messageBuilder(App.db.getCourses_AL(), "name")).queue();
-//                for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
-//                    channel.sendMessage(App.db.getCourses_AL().get(i).getCourseName()).queue();
-//                }
+                channel.sendMessage("Getting Courses").queue();
+                loadCourses();
 
                 ArrayList<String> allCourses = messageBuilder.convert(App.db.getCourses_AL());
                 for (String s : allCourses) {
                     channel.sendMessage(s).queue();
                 }
-
             }
 
             // Temp; UI guys redo this
             case "!hw" -> {
-                MessageChannel channel = event.getChannel();
+                loadCourses();
 
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
                 channel.sendMessage("Getting All Assignments").queue();
-                try {
-                    App.db.assLOAD(CanvasGet.getAllAssignments());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                loadAssignments();
 
                 ArrayList<String> allHw = messageBuilder.convert(App.db.getAllAss_AL());
                 for (String s : allHw) {
@@ -105,25 +75,8 @@ public class MyListener extends ListenerAdapter {
 
             // Temp; UI guys redo this
             case "!upcoming" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Upcoming Assignments").queue();
                 try {
@@ -141,25 +94,8 @@ public class MyListener extends ListenerAdapter {
 
             // Temp; UI guys redo this
             case "!overdue" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Overdue Assignments").queue();
                 try {
@@ -174,25 +110,8 @@ public class MyListener extends ListenerAdapter {
                 }
             }
             case "!undated" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Undated Assignments").queue();
                 try {
@@ -209,25 +128,8 @@ public class MyListener extends ListenerAdapter {
 
             // Temp; UI guys redo this
             case "!submitted" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Submitted Assignments").queue();
                 try {
@@ -240,6 +142,26 @@ public class MyListener extends ListenerAdapter {
                 for (String s : past) {
                     channel.sendMessage(s).queue();
                 }
+            }
+        }
+    }
+
+    private static void loadAssignments() {
+        if (App.db.getAllAss_AL().isEmpty()) {
+            try {
+                App.db.assLOAD(CanvasGet.getAllAssignments());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static void loadCourses() {
+        if (App.db.getCourses_AL().isEmpty()) {
+            try {
+                App.db.courseLOAD(CanvasGet.getCourses());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }
