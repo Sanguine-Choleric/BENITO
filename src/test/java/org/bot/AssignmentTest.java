@@ -4,6 +4,10 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AssignmentTest {
@@ -44,7 +48,9 @@ public class AssignmentTest {
 
     @Test
     void testGetDateFormat() {
-        assertEquals("2023-04-22T23:59:59", assignment.getDateFormat().toString(), "Testing date format getter");
+        LocalDateTime localized = ZonedDateTime.parse(assignment.getAssDate(), DateTimeFormatter.ISO_DATE_TIME)
+                .withZoneSameInstant(java.time.ZoneId.systemDefault()).toLocalDateTime();
+        assertEquals(localized.toString(), assignment.getDateFormat().toString(), "Testing date format getter");
     }
 
     @Test

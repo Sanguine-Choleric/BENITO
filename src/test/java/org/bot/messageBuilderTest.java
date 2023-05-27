@@ -5,6 +5,9 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,6 +75,11 @@ class MessageBuilderTest {
         jsonAssignment.put("has_submitted_submissions", true);
         jsonAssignments.put(jsonAssignment);
 
+        // Fix for GitHub actions and changing timezones
+        LocalDateTime localized = ZonedDateTime.parse(jsonAssignment.getString("due_at"), DateTimeFormatter.ISO_DATE_TIME)
+                .withZoneSameInstant(java.time.ZoneId.systemDefault()).toLocalDateTime();
+        String localized_s = localized.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
+
         // Assignment with null date
         jsonAssignment = new JSONObject();
         jsonAssignment.put("id", 1010);
@@ -102,11 +110,11 @@ class MessageBuilderTest {
         App.db.assLOAD(jsonAssignments);
 
         String s = messageBuilder.convert(App.db.getAllAss_AL()).get(0);
-        assertEquals("""
-                ```04/22 23:59 | CSC101  | Assignment 1
-                            | CSC101  | Assignment 2
-                            | CSC101  | Assignment 3 with a very long name that should be ...
-                            |         | Assignment 4```""", s);
+
+        assertEquals("```" + localized_s + " | CSC101  | Assignment 1\n" +
+                "            | CSC101  | Assignment 2\n" +
+                "            | CSC101  | Assignment 3 with a very long name that should be ...\n" +
+                "            |         | Assignment 4```", s);
     }
 
     // Testing for large number of assignments
