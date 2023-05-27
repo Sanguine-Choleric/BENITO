@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
 
-// TODO: messageBuilder integration for all commands
-
 public class MyListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -25,6 +23,34 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Pong!").queue();
             }
 
+            case "!help" -> {
+                MessageChannel channel = event.getChannel();
+
+                ArrayList<String[]> commandList = new ArrayList<>();
+                commandList.add(new String[]{"!ping", "Pong!"});
+                commandList.add(new String[]{"!help", "This message"});
+                commandList.add(new String[]{"!courses", "List all courses"});
+                commandList.add(new String[]{"!hw", "List all assignments"});
+                commandList.add(new String[]{"!upcoming", "List all upcoming assignments"});
+                commandList.add(new String[]{"!overdue", "List all overdue assignments"});
+                commandList.add(new String[]{"!past", "List all past submitted assignments"});
+                commandList.add(new String[]{"!undated", "List all undated assignments"});
+
+                int maxCommandLength = 0;
+                for (String[] command : commandList) {
+                    maxCommandLength = Math.max(maxCommandLength, command[0].length());
+                }
+
+                StringBuilder formattedCommands = new StringBuilder();
+                for (String[] command : commandList) {
+                    String formattedCommand = String.format("%-" + maxCommandLength + "s - %s%n", command[0], command[1]);
+                    formattedCommands.append(formattedCommand);
+                }
+
+                String outputString = String.format("```\n%s\n```", formattedCommands.toString());
+                channel.sendMessage(outputString).queue();
+            }
+
             // Temp; UI guys redo this
             case "!courses" -> {
                 MessageChannel channel = event.getChannel();
@@ -39,10 +65,16 @@ public class MyListener extends ListenerAdapter {
                     }
                 }
 
-                // channel.sendMessage(messageBuilder(App.db.getCourses_AL(), "name")).queue();
-                for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
-                    channel.sendMessage(App.db.getCourses_AL().get(i).getCourseName()).queue();
+//                // channel.sendMessage(messageBuilder(App.db.getCourses_AL(), "name")).queue();
+//                for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
+//                    channel.sendMessage(App.db.getCourses_AL().get(i).getCourseName()).queue();
+//                }
+
+                ArrayList<String> allCourses = messageBuilder.convert(App.db.getCourses_AL());
+                for (String s : allCourses) {
+                    channel.sendMessage(s).queue();
                 }
+
             }
 
             // Temp; UI guys redo this
@@ -65,8 +97,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                for (int i = 0; i < App.db.getAllAss_AL().size(); i++) {
-                    channel.sendMessage(App.db.getAllAss_AL().get(i).getAssName()).queue();
+                ArrayList<String> allHw = messageBuilder.convert(App.db.getAllAss_AL());
+                for (String s : allHw) {
+                    channel.sendMessage(s).queue();
                 }
             }
 
@@ -98,10 +131,6 @@ public class MyListener extends ListenerAdapter {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-
-//                for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
-//                    channel.sendMessage(App.db.getUpcomingAss_AL().get(i).getAssName()).queue();
-//                }
 
                 ArrayList<String> upcoming = messageBuilder.convert(App.db.getUpcomingAss_AL());
                 for (String s : upcoming) {
@@ -139,45 +168,11 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                for (int i = 0; i < App.db.getOverdueAss_AL().size(); i++) {
-                    channel.sendMessage(App.db.getOverdueAss_AL().get(i).getAssName()).queue();
+                ArrayList<String> overdue = messageBuilder.convert(App.db.getOverdueAss_AL());
+                for (String s : overdue) {
+                    channel.sendMessage(s).queue();
                 }
             }
-
-            // Temp; UI guys redo this
-            case "!past" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                channel.sendMessage("Getting Past Submitted Assignments").queue();
-                try {
-                    App.db.setPastSubmittedAss_AL(Database.pastSubmitted(App.db.getAllAss_AL()));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-                for (int i = 0; i < App.db.getPastSubmittedAss_AL().size(); i++) {
-                    channel.sendMessage(App.db.getPastSubmittedAss_AL().get(i).getAssName()).queue();
-                }
-            }
-
             case "!undated" -> {
                 MessageChannel channel = event.getChannel();
                 if (App.db.getCourses_AL().isEmpty()) {
@@ -206,9 +201,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                // TODO: print support for undated assignments
-                for (int i = 0; i < App.db.getUndatedAss_AL().size(); i++) {
-                    channel.sendMessage(App.db.getUndatedAss_AL().get(i).getAssName()).queue();
+                ArrayList<String> undated = messageBuilder.convert(App.db.getUndatedAss_AL());
+                for (String s : undated) {
+                    channel.sendMessage(s).queue();
                 }
             }
 
@@ -241,8 +236,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                for (int i = 0; i < App.db.getPastSubmittedAss_AL().size(); i++) {
-                    channel.sendMessage(App.db.getPastSubmittedAss_AL().get(i).getAssName()).queue();
+                ArrayList<String> past = messageBuilder.convert(App.db.getPastSubmittedAss_AL());
+                for (String s : past) {
+                    channel.sendMessage(s).queue();
                 }
             }
         }

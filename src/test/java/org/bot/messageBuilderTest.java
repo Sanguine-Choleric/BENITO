@@ -104,9 +104,9 @@ class MessageBuilderTest {
         String s = messageBuilder.convert(App.db.getAllAss_AL()).get(0);
         assertEquals("""
                 ```04/22 23:59 | CSC101  | Assignment 1
-                00/00 00:00 | CSC101  | Assignment 2
-                00/00 00:00 | CSC101  | Assignment 3 with a very long name that should be truncated and have three ...
-                00/00 00:00 |         | Assignment 4```""", s);
+                            | CSC101  | Assignment 2
+                            | CSC101  | Assignment 3 with a very long name that should be ...
+                            |         | Assignment 4```""", s);
     }
 
     // Testing for large number of assignments

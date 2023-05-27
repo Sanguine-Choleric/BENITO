@@ -26,10 +26,10 @@ public class messageBuilder {
             String objectString = objectToString(object);
 
             // I am the way to go among the lost
-            if (charCount + objectString.length() + 1 > 2000) {
+            if (charCount + objectString.length() + 1 > 1994) {
 
                 // Justice caused my high architect to move
-                strings.add(sb.toString());
+                strings.add("```" + sb + "```");
                 sb = new StringBuilder();
                 charCount = 0;
             }
@@ -79,7 +79,7 @@ public class messageBuilder {
 
     private static String formatDueDate(LocalDateTime dueDate) {
         if (dueDate == null) {
-            return "00/00 00:00";
+            return "           "; // 11 spaces for "HH:MM AM/PM"
         }
         return dueDate.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
     }
@@ -97,7 +97,7 @@ public class messageBuilder {
     }
 
     private static String formatAssignmentName(String AssignmentName) {
-        int MAX_LENGTH = 75;
+        int MAX_LENGTH = 50;
         String stripped = AssignmentName.replaceAll("[\\\\*_`\\[\\]]", "\\\\$0");
         if (stripped.length() > MAX_LENGTH) {
             return stripped.substring(0, MAX_LENGTH) + "...";

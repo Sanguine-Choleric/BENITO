@@ -84,7 +84,7 @@ public class CanvasGet {
     
         for (int courseId : courseIds) {
             // TODO: Fix API response error - Some classes don't have a courseId?. Temp fix by filtering for large course IDs.
-//            if (courseId > 100000) {
+            if (courseId > 100000) {
 
                 // Pagination fix - Grabs assignments by page until nothing is returned
                 int page = 1;
@@ -93,7 +93,7 @@ public class CanvasGet {
                     String url = "https://csus.instructure.com/api/v1/courses/" + courseId + "/assignments?per_page=50&page=" + page;
                     HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
                     JSONArray assignmentsSingleCourse = canvasAPIGetter(connection);
-    
+
                     // Unpacking each JSONArray received from each url and
                     // Recombining into a single mega-JSONArray
                     for (int i = 0; i < assignmentsSingleCourse.length(); i++) {
@@ -108,7 +108,7 @@ public class CanvasGet {
                         page++;
                     }
                 }
-//            }
+            }
         }
     
         return allAssignments;

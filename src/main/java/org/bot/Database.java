@@ -190,15 +190,6 @@ public class Database {
             if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "course_id",
                     "has_submitted_submissions")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
-
-                //TODO: Remove below before pull request
-                //This is the manual check to check for data----------------------------------
-//                System.out.println(i);
-//                System.out.println(allAss_AL.get(i).getData());
-//                System.out.println(assignments.getJSONObject(i));
-//                System.out.println("------------------------------");
-                //End of Debugging checks-----------------------------------------------------
-
             } else {
                 System.out.println("Assignment " + i + " is missing a field");
             }
