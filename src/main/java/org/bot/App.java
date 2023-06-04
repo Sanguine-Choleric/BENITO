@@ -8,7 +8,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         Database database = new Database();
-        CanvasGet canvasGet = new CanvasGet(database);
+        CanvasGet canvasGet = new CanvasGet();
 
         // Pre-populating database
         System.out.println("Populating Courses");

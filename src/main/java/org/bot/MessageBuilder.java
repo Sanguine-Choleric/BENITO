@@ -3,28 +3,15 @@ package org.bot;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 // TODO: Another redesign
 
 public class MessageBuilder {
     Database database;
-    List<String> courses = new ArrayList<>();
-    List<String> assignments = new ArrayList<>();
 
     public MessageBuilder(Database database) {
         this.database = database;
     }
-
-//    public List<String> getAssignments() {
-//        assignments = convertAssignments(database.getAssignments());
-//        return assignments;
-//    }
-//
-//    public List<String> getCourses() {
-//        courses = convertCourses(database.getCourses());
-//        return courses;
-//    }
 
     /**
      * Converts an arraylist of assignments into pretty strings. Works with

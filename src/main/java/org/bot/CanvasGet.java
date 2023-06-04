@@ -14,11 +14,6 @@ import java.net.URI;
  * needed for functions that need them.
  */
 public class CanvasGet {
-    Database database;
-
-    public CanvasGet(Database database) {
-        this.database = database;
-    }
 
     /**
      * Sends a GET request to the Canvas API using the specified HttpURLConnection

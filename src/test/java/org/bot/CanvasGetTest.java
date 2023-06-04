@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 public class CanvasGetTest {
     Database database = new Database();
-    CanvasGet canvasGet = new CanvasGet(database);
+    CanvasGet canvasGet = new CanvasGet();
 
     @Test
     public void testCanvasAPIGetter() throws IOException {
