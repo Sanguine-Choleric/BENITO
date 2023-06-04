@@ -14,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MessageBuilderTest {
-    Database db;
+    Database database;
+    MessageBuilder messageBuilder;
     JSONObject jsonCourse;
     JSONArray jsonCourses;
     JSONObject jsonAssignment;
@@ -22,7 +23,8 @@ class MessageBuilderTest {
 
     @BeforeEach
     void setUp() {
-
+        database = new Database();
+        messageBuilder = new MessageBuilder(database);
     }
 
     // Test for courses
@@ -30,7 +32,7 @@ class MessageBuilderTest {
     void convert_courses() {
         // Initializing test setup
         // Adds two courses
-        App.db = new Database();
+        database.clear();
         jsonCourses = new JSONArray();
         jsonCourse = new JSONObject();
         jsonCourse.put("id", 100);
@@ -40,10 +42,10 @@ class MessageBuilderTest {
         jsonCourse.put("id", 101);
         jsonCourse.put("name", "Course 2");
         jsonCourses.put(jsonCourse);
-        App.db.courseLOAD(jsonCourses);
+        database.courseLOAD(jsonCourses);
 
         // Test starts here
-        ArrayList<String> s = messageBuilder.convert(App.db.getCourses_AL());
+        ArrayList<String> s = messageBuilder.convertCourses(database.getCourses());
         assertEquals("```Course 1\n" +
                 "Course 2```", s.get(0));
     }
@@ -51,8 +53,7 @@ class MessageBuilderTest {
     // Test for assignments
     @Test
     void convert_assignments() {
-        App.db = new Database();
-
+        database.clear();
         // Regular list of courses
         jsonCourses = new JSONArray();
 
@@ -63,7 +64,7 @@ class MessageBuilderTest {
 
         jsonCourses.put(jsonCourse);
 
-        App.db.courseLOAD(jsonCourses);
+        database.courseLOAD(jsonCourses);
 
         // Regular assignment
         jsonAssignments = new JSONArray();
@@ -107,27 +108,27 @@ class MessageBuilderTest {
         jsonAssignment.put("has_submitted_submissions", true);
         jsonAssignments.put(jsonAssignment);
 
-        App.db.assLOAD(jsonAssignments);
+        database.assignmentLoad(jsonAssignments);
 
-        String s = messageBuilder.convert(App.db.getAllAss_AL()).get(0);
+        String s = messageBuilder.convertAssignments(database.getAssignments()).get(0);
 
-        assertEquals("```" + localized_s + " | CSC101  | Assignment 1\n" +
-                "            | CSC101  | Assignment 2\n" +
-                "            | CSC101  | Assignment 3 with a very long name that should be ...\n" +
-                "            |         | Assignment 4```", s);
+        assertEquals("```" + localized_s + " | CSC101 | Assignment 1\n" +
+                "            | CSC101 | Assignment 2\n" +
+                "            | CSC101 | Assignment 3 with a very long name that should be ...\n" +
+                "            |        | Assignment 4```", s);
     }
 
     // Testing for large number of assignments
     @Test
     void convert_assignments_large() {
         // Initializing blank database with single course
-        App.db = new Database();
+        database.clear();
         jsonCourses = new JSONArray();
         jsonCourse = new JSONObject();
         jsonCourse.put("id", 100);
         jsonCourse.put("name", "CSC101");
         jsonCourses.put(jsonCourse);
-        App.db.courseLOAD(jsonCourses);
+        database.courseLOAD(jsonCourses);
 
         // Initializing list of assignments
         jsonAssignments = new JSONArray();
@@ -143,9 +144,9 @@ class MessageBuilderTest {
             jsonAssignments.put(jsonAssignment);
         }
 
-        App.db.assLOAD(jsonAssignments);
+        database.assignmentLoad(jsonAssignments);
 
-        ArrayList<String> sArr = messageBuilder.convert(App.db.getAllAss_AL());
+        ArrayList<String> sArr = messageBuilder.convertAssignments(database.getAssignments());
         assertTrue(sArr.size() > 1);
 
         for (String s : sArr) {
@@ -153,13 +154,4 @@ class MessageBuilderTest {
         }
     }
 
-    // Bad object test
-    @Test
-    void convert_else() {
-        ArrayList<Object> objects = new ArrayList<>();
-        objects.add(new Object());
-        ArrayList<String> s = messageBuilder.convert(objects);
-
-        assertEquals("```Error: objectToString() called on non-Course, non-Assignment object```", s.get(0));
-    }
 }

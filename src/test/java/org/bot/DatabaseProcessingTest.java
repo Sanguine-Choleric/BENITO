@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DatabaseProcessingTest {
+    Database database;
     JSONObject assignment;
     ArrayList<Assignment> assignments = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
+        database = new Database();
+
 //      Assignment 1
 //      In the Past and submitted
         assignment = new JSONObject();
@@ -48,7 +51,7 @@ public class DatabaseProcessingTest {
 
     @Test
     void testUpcomingDue() {
-        ArrayList<Assignment> upcoming = Database.upcomingDue(assignments);
+        ArrayList<Assignment> upcoming = database.upcomingAssignments(assignments);
         assertEquals(2, upcoming.size(), "Only the two assignments due in the future should be returned");
         assertEquals("Test Assignment 2", upcoming.get(0).getAssName(), "Test Assignment 2 should be first");
         assertEquals("Test Assignment 3", upcoming.get(1).getAssName(), "Test Assignment 3 should be second");
@@ -62,7 +65,7 @@ public class DatabaseProcessingTest {
 
         assignments.add(new Assignment(assignment));
 
-        upcoming = Database.upcomingDue(assignments);
+        upcoming = database.upcomingAssignments(assignments);
         assertEquals(2, upcoming.size(), "Null date shouldn't appear");
 
 
@@ -80,7 +83,7 @@ public class DatabaseProcessingTest {
 
         assignments.add(new Assignment(assignment));
 
-        ArrayList<Assignment> overdue = Database.overDue(assignments);
+        ArrayList<Assignment> overdue = database.overdueAssignments(assignments);
         assertEquals(1, overdue.size(), "Only the one assignment in past and unsubmitted should appear");
         assertEquals("Test Overdue Assignment", overdue.get(0).getAssName(), "Test Overdue Assignment should be first");
 
@@ -93,7 +96,7 @@ public class DatabaseProcessingTest {
 
         assignments.add(new Assignment(assignment));
 
-        overdue = Database.overDue(assignments);
+        overdue = database.overdueAssignments(assignments);
         assertEquals(1, overdue.size(), "Null date shouldn't appear");
     }
 
@@ -109,7 +112,7 @@ public class DatabaseProcessingTest {
 
         assignments.add(new Assignment(assignment));
 
-        ArrayList<Assignment> pastSubmitted = Database.pastSubmitted(assignments);
+        ArrayList<Assignment> pastSubmitted = database.submittedAssignments(assignments);
         assertEquals(2, pastSubmitted.size(), "2 should appear, the one in this test and the one in setup");
         assertEquals("Test Assignment", pastSubmitted.get(0).getAssName(), "Test Assignment should be first");
         assertEquals("Test Past Submitted Assignment", pastSubmitted.get(1).getAssName(),
@@ -125,7 +128,7 @@ public class DatabaseProcessingTest {
 
         assignments.add(new Assignment(assignment));
 
-        pastSubmitted = Database.pastSubmitted(assignments);
+        pastSubmitted = database.submittedAssignments(assignments);
         assertEquals(2, pastSubmitted.size(), "Null date shouldn't appear");
     }
 
@@ -140,7 +143,7 @@ public class DatabaseProcessingTest {
 
         assignments.add(new Assignment(assignment));
 
-        ArrayList<Assignment> undated = Database.undatedAssignments(assignments);
+        ArrayList<Assignment> undated = database.undatedAssignments(assignments);
         assertEquals(1, undated.size(), "Only the one assignment with null date should appear");
 
     }

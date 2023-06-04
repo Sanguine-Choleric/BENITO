@@ -8,20 +8,27 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.util.ArrayList;
 
 public class MyListener extends ListenerAdapter {
+    Database database;
+    CanvasGet canvasGet;
+    MessageBuilder messageBuilder;
+
+    public MyListener(Database database) {
+        this.database = database;
+        this.canvasGet = new CanvasGet(database);
+        this.messageBuilder = new MessageBuilder(database);
+    }
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
 
-        if (event.getAuthor().isBot())
-            return;
+        if (event.getAuthor().isBot()) return;
 
         Message message = event.getMessage();
         String content = message.getContentRaw();
         MessageChannel channel = event.getChannel();
 
         switch (content) {
-            case "!ping" -> {
-                channel.sendMessage("Pong!").queue();
-            }
+            case "!ping" -> channel.sendMessage("Pong!").queue();
 
             case "!help" -> {
                 ArrayList<String[]> commandList = new ArrayList<>();
@@ -54,8 +61,8 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Getting Courses").queue();
                 loadCourses();
 
-                ArrayList<String> allCourses = messageBuilder.convert(App.db.getCourses_AL());
-                for (String s : allCourses) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertCourses(database.getCourses())) {
                     channel.sendMessage(s).queue();
                 }
             }
@@ -67,8 +74,8 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Getting All Assignments").queue();
                 loadAssignments();
 
-                ArrayList<String> allHw = messageBuilder.convert(App.db.getAllAss_AL());
-                for (String s : allHw) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getAssignments())) {
                     channel.sendMessage(s).queue();
                 }
             }
@@ -80,16 +87,15 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Upcoming Assignments").queue();
                 try {
-                    App.db.setUpcomingAss_AL(Database.upcomingDue(App.db.getAllAss_AL()));
+                    database.setUpcomingAssignments(database.upcomingAssignments(database.getAssignments()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> upcoming = messageBuilder.convert(App.db.getUpcomingAss_AL());
-                for (String s : upcoming) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getUpcoming())) {
                     channel.sendMessage(s).queue();
                 }
-
             }
 
             // Temp; UI guys redo this
@@ -99,13 +105,13 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Overdue Assignments").queue();
                 try {
-                    App.db.setOverdueAss_AL(Database.overDue(App.db.getAllAss_AL()));
+                    database.setOverdueAssignments(database.overdueAssignments(database.getAssignments()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> overdue = messageBuilder.convert(App.db.getOverdueAss_AL());
-                for (String s : overdue) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getOverdue())) {
                     channel.sendMessage(s).queue();
                 }
             }
@@ -115,13 +121,13 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Undated Assignments").queue();
                 try {
-                    App.db.setUndatedAss_AL(Database.undatedAssignments(App.db.getAllAss_AL()));
+                    database.setUndatedAssignments(database.undatedAssignments(database.getAssignments()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> undated = messageBuilder.convert(App.db.getUndatedAss_AL());
-                for (String s : undated) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getUndated())) {
                     channel.sendMessage(s).queue();
                 }
             }
@@ -133,33 +139,33 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Submitted Assignments").queue();
                 try {
-                    App.db.setPastSubmittedAss_AL(Database.pastSubmitted(App.db.getAllAss_AL()));
+                    database.setSubmittedAssignments(database.submittedAssignments(database.getAssignments()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> past = messageBuilder.convert(App.db.getPastSubmittedAss_AL());
-                for (String s : past) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getSubmitted())) {
                     channel.sendMessage(s).queue();
                 }
             }
         }
     }
 
-    private static void loadAssignments() {
-        if (App.db.getAllAss_AL().isEmpty()) {
+    private void loadAssignments() {
+        if (database.getAssignments().isEmpty()) {
             try {
-                App.db.assLOAD(CanvasGet.getAllAssignments());
+                database.assignmentLoad(canvasGet.getAllAssignments(database));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    private static void loadCourses() {
-        if (App.db.getCourses_AL().isEmpty()) {
+    private void loadCourses() {
+        if (database.getCourses().isEmpty()) {
             try {
-                App.db.courseLOAD(CanvasGet.getCourses());
+                database.courseLOAD(canvasGet.getCourses());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
