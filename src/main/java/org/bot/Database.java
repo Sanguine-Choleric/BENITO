@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,35 +17,35 @@ import java.util.Objects;
 public class Database {
     static LocalDateTime today = LocalDateTime.now();
     public ArrayList<Course> courses = new ArrayList<>();
-    private final ArrayList<Assignment> allAssignments = new ArrayList<>();
-    private ArrayList<Assignment> upcomingAssignments = new ArrayList<>();
-    private ArrayList<Assignment> overdueAssignments = new ArrayList<>();
-    private ArrayList<Assignment> submittedAssignments = new ArrayList<>();
-    private ArrayList<Assignment> undatedAssignments = new ArrayList<>();
+    private List<Assignment> allAssignments = new ArrayList<>();
+    private List<Assignment> upcomingAssignments = new ArrayList<>();
+    private List<Assignment> overdueAssignments = new ArrayList<>();
+    private List<Assignment> submittedAssignments = new ArrayList<>();
+    private List<Assignment> undatedAssignments = new ArrayList<>();
 
-    public ArrayList<Assignment> getSubmitted() {
+    public List<Assignment> getSubmitted() {
         return submittedAssignments;
     }
 
-    public void setSubmittedAssignments(ArrayList<Assignment> submittedAssignments) {
-        this.submittedAssignments = submittedAssignments;
+    public void setSubmittedAssignments() {
+        this.submittedAssignments = submittedAssignments(allAssignments);
     }
 
-    public ArrayList<Assignment> getUndated() {
+    public List<Assignment> getUndated() {
         return undatedAssignments;
     }
 
-    public void setUndatedAssignments(ArrayList<Assignment> undatedAssignments) {
-        this.undatedAssignments = undatedAssignments;
+    public void setUndatedAssignments() {
+        this.undatedAssignments = undatedAssignments(allAssignments);
     }
 
 
-    public ArrayList<Assignment> getOverdue() {
+    public List<Assignment> getOverdue() {
         return overdueAssignments;
     }
 
-    public void setOverdueAssignments(ArrayList<Assignment> overdueAssignments) {
-        this.overdueAssignments = overdueAssignments;
+    public void setOverdueAssignments() {
+        this.overdueAssignments = overdueAssignments(allAssignments);
     }
 
     public void clear() {
@@ -56,13 +57,13 @@ public class Database {
         undatedAssignments.clear();
     }
 
-    public ArrayList<Assignment> getUpcoming() {
+    public List<Assignment> getUpcoming() {
         return upcomingAssignments;
     }
 
     // Setter for populating upcomingAss_AL with upcoming assignments
-    public void setUpcomingAssignments(ArrayList<Assignment> upcomingAssignments) {
-        this.upcomingAssignments = upcomingAssignments;
+    public void setUpcomingAssignments() {
+        this.upcomingAssignments = upcomingAssignments(allAssignments);
     }
 
     // Getter for courses_AL; returns an ArrayList of Course objects
@@ -71,7 +72,7 @@ public class Database {
     }
 
     // Getter for allAss_AL; returns an ArrayList of Assignment objects
-    public ArrayList<Assignment> getAssignments() {
+    public List<Assignment> getAssignments() {
         return allAssignments;
     }
 
@@ -81,7 +82,7 @@ public class Database {
      *
      * @param courses the JSONArray containing Course objects
      */
-    public void courseLOAD(JSONArray courses) {
+    public void courseLoad(JSONArray courses) {
         for (int i = 0; i < courses.length(); i++) {
             if (hasNonNullValues(courses.getJSONObject(i), "name", "id")) {
                 this.courses.add(new Course(courses.getJSONObject(i)));
@@ -101,7 +102,7 @@ public class Database {
      * @param allAssignments, the arraylist of all assignments
      * @return returns an arraylist to populate the upcoming assignment category
      */
-    public ArrayList<Assignment> upcomingAssignments(ArrayList<Assignment> allAssignments) {
+    public ArrayList<Assignment> upcomingAssignments(List<Assignment> allAssignments) {
         ArrayList<Assignment> upcoming = new ArrayList<>();
         today = LocalDateTime.now();
 
@@ -127,7 +128,7 @@ public class Database {
      * @param allAssignments the list of all assignments
      * @return a sorted list of overdue assignments
      */
-    public ArrayList<Assignment> overdueAssignments(ArrayList<Assignment> allAssignments) {
+    public ArrayList<Assignment> overdueAssignments(List<Assignment> allAssignments) {
         ArrayList<Assignment> overdue = new ArrayList<>();
         today = LocalDateTime.now();
 
@@ -146,7 +147,7 @@ public class Database {
         return overdue;
     }
 
-    public ArrayList<Assignment> undatedAssignments(ArrayList<Assignment> allAssignments) {
+    public ArrayList<Assignment> undatedAssignments(List<Assignment> allAssignments) {
         ArrayList<Assignment> undated = new ArrayList<>();
         for (Assignment a : allAssignments) {
             if (a.getDateFormat() == null) {
@@ -157,7 +158,7 @@ public class Database {
         return undated;
     }
 
-    public ArrayList<Assignment> submittedAssignments(ArrayList<Assignment> allAssignments) {
+    public ArrayList<Assignment> submittedAssignments(List<Assignment> allAssignments) {
         ArrayList<Assignment> pastSubmitted = new ArrayList<>();
         today = LocalDateTime.now();
 

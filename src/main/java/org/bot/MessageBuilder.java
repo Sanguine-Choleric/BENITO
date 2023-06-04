@@ -3,6 +3,7 @@ package org.bot;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Another redesign
 
@@ -21,8 +22,8 @@ public class MessageBuilder {
      * @return ArrayList of strings, each of which is a message to be sent to
      * Discord
      */
-    public ArrayList<String> convertAssignments(ArrayList<Assignment> assignments) {
-        ArrayList<String> strings = new ArrayList<>();
+    public List<String> convertAssignments(List<Assignment> assignments) {
+        List<String> strings = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         int charCount = 0;
 
@@ -33,7 +34,7 @@ public class MessageBuilder {
             String assignmentString = assignmentToString(assignment);
 
             // I am the way to go among the lost
-            if (charCount + assignmentString.length() + 1 > 1994) {
+            if (charCount + assignmentString.length() + 1 > 1994) { // 2000 - 6 for "```" x2
 
                 // Justice caused my high architect to move
                 strings.add("```" + sb + "```");
@@ -63,8 +64,8 @@ public class MessageBuilder {
         return strings;
     }
 
-    public ArrayList<String> convertCourses(ArrayList<Course> courses) {
-        ArrayList<String> strings = new ArrayList<>();
+    public List<String> convertCourses(List<Course> courses) {
+        List<String> strings = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         int charcount = 0;
         for (Course course : courses) {
@@ -111,7 +112,7 @@ public class MessageBuilder {
         return "      "; // 7 spaces - temporary fix for when course name is not found
     }
 
-    private static String formatAssignmentName(String AssignmentName) {
+    private String formatAssignmentName(String AssignmentName) {
         int MAX_LENGTH = 50;
         String stripped = AssignmentName.replaceAll("[\\\\*_`\\[\\]]", "\\\\$0");
         if (stripped.length() > MAX_LENGTH) {

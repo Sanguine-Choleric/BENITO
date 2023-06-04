@@ -6,8 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -66,7 +64,7 @@ public class DatabaseTest {
 
     @Test
     void setPastSubmittedAss_AL() {
-        db.setSubmittedAssignments(new ArrayList<>());
+        db.setSubmittedAssignments();
 
         assertNotNull(db.getSubmitted());
     }
@@ -80,7 +78,7 @@ public class DatabaseTest {
 
     @Test
     void setOverdueAss_AL() {
-        db.setOverdueAssignments(new ArrayList<>());
+        db.setOverdueAssignments();
 
         assertNotNull(db.getOverdue());
     }
@@ -88,9 +86,9 @@ public class DatabaseTest {
     @Test
     void clear() {
         db.assignmentLoad(jsonAssignments);
-        db.setOverdueAssignments(db.overdueAssignments(db.getAssignments()));
-        db.setUpcomingAssignments(db.upcomingAssignments(db.getAssignments()));
-        db.setSubmittedAssignments(db.submittedAssignments(db.getAssignments()));
+        db.setOverdueAssignments();
+        db.setUpcomingAssignments();
+        db.setSubmittedAssignments();
 
         db.clear();
         assertEquals(0, db.getAssignments().size());
@@ -102,7 +100,7 @@ public class DatabaseTest {
     // Testing that getters and setters return the right type
     @Test
     void testGetCourses_AL() {
-        db.courseLOAD(jsonCourses);
+        db.courseLoad(jsonCourses);
 
         assertNotNull(db.getCourses());
     }
@@ -123,7 +121,7 @@ public class DatabaseTest {
 
     @Test
     void testSetUpcomingAss_AL() {
-        db.setUpcomingAssignments(new ArrayList<>());
+        db.setUpcomingAssignments();
 
         assertNotNull(db.getUpcoming());
     }
@@ -137,7 +135,7 @@ public class DatabaseTest {
 
     @Test
     void setUndatedAss_AL() {
-        db.setUndatedAssignments(new ArrayList<>());
+        db.setUndatedAssignments();
 
         assertNotNull(db.getUndated());
     }
@@ -147,7 +145,7 @@ public class DatabaseTest {
 
         @Test
         void testCourseLOAD() {
-            db.courseLOAD(jsonCourses);
+            db.courseLoad(jsonCourses);
 
             assertEquals(2, db.getCourses().size());
 
@@ -160,7 +158,7 @@ public class DatabaseTest {
 
         @Test
         void testCourseLOADEmpty() {
-            db.courseLOAD(new JSONArray());
+            db.courseLoad(new JSONArray());
 
             assertEquals(0, db.getCourses().size());
         }
@@ -170,7 +168,7 @@ public class DatabaseTest {
             jsonCourse = new JSONObject();
             jsonCourse.put("id", 100);
             jsonCourses.put(jsonCourse);
-            db.courseLOAD(jsonCourses);
+            db.courseLoad(jsonCourses);
 
             assertEquals(2, db.getCourses().size(), "Database should refuse to load courses with missing fields");
         }
@@ -181,7 +179,7 @@ public class DatabaseTest {
             jsonCourse.put("id", 100);
             jsonCourse.put("name", JSONObject.NULL);
             jsonCourses.put(jsonCourse);
-            db.courseLOAD(jsonCourses);
+            db.courseLoad(jsonCourses);
 
             assertEquals(2, db.getCourses().size(), "Database should refuse to load courses with null fields");
         }

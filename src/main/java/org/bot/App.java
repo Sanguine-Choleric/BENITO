@@ -12,9 +12,9 @@ public class App {
 
         // Pre-populating database
         System.out.println("Populating Courses");
-        database.courseLOAD(canvasGet.getCourses());
+        database.courseLoad(canvasGet.getCourses());
         System.out.println("Populating Assignments");
-        database.assignmentLoad(canvasGet.getAllAssignments(database));
+        database.assignmentLoad(canvasGet.getAllAssignments(database.getCourses()));
         System.out.println("Bot is ready");
 
         JDA builder = JDABuilder.createDefault(API_keys.DiscordKey).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();

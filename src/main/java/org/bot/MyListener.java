@@ -30,15 +30,16 @@ public class MyListener extends ListenerAdapter {
         switch (content) {
             case "!ping" -> channel.sendMessage("Pong!").queue();
 
-            case "!help" -> {
+            default -> {
                 ArrayList<String[]> commandList = new ArrayList<>();
                 commandList.add(new String[]{"!ping", "Pong!"});
                 commandList.add(new String[]{"!help", "This message"});
+                commandList.add(new String[]{"!update", "Update the database"});
                 commandList.add(new String[]{"!courses", "List all courses"});
                 commandList.add(new String[]{"!hw", "List all assignments"});
                 commandList.add(new String[]{"!upcoming", "List all upcoming assignments"});
                 commandList.add(new String[]{"!overdue", "List all overdue assignments"});
-                commandList.add(new String[]{"!past", "List all past submitted assignments"});
+                commandList.add(new String[]{"!submitted", "List all past submitted assignments"});
                 commandList.add(new String[]{"!undated", "List all undated assignments"});
 
                 int maxCommandLength = 0;
@@ -48,12 +49,29 @@ public class MyListener extends ListenerAdapter {
 
                 StringBuilder formattedCommands = new StringBuilder();
                 for (String[] command : commandList) {
-                    String formattedCommand = String.format("%-" + maxCommandLength + "s - %s%n", command[0], command[1]);
+                    String formattedCommand = String.format("%-" + maxCommandLength + "s | %s%n", command[0], command[1]);
                     formattedCommands.append(formattedCommand);
                 }
 
                 String outputString = String.format("```\n%s\n```", formattedCommands);
                 channel.sendMessage(outputString).queue();
+            }
+
+            case "!update" -> {
+                try {
+                    channel.sendMessage("Updating Courses").queue();
+                    database.courseLoad(canvasGet.getCourses());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    channel.sendMessage("Updating Assignments").queue();
+                    database.assignmentLoad(canvasGet.getAllAssignments(database.getCourses()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                channel.sendMessage("Database Updated").queue();
             }
 
             // Temp; UI guys redo this
@@ -87,7 +105,7 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Upcoming Assignments").queue();
                 try {
-                    database.setUpcomingAssignments(database.upcomingAssignments(database.getAssignments()));
+                    database.setUpcomingAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -105,7 +123,7 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Overdue Assignments").queue();
                 try {
-                    database.setOverdueAssignments(database.overdueAssignments(database.getAssignments()));
+                    database.setOverdueAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -121,7 +139,7 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Undated Assignments").queue();
                 try {
-                    database.setUndatedAssignments(database.undatedAssignments(database.getAssignments()));
+                    database.setUndatedAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -139,7 +157,7 @@ public class MyListener extends ListenerAdapter {
 
                 channel.sendMessage("Getting Submitted Assignments").queue();
                 try {
-                    database.setSubmittedAssignments(database.submittedAssignments(database.getAssignments()));
+                    database.setSubmittedAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -155,7 +173,7 @@ public class MyListener extends ListenerAdapter {
     private void loadAssignments() {
         if (database.getAssignments().isEmpty()) {
             try {
-                database.assignmentLoad(canvasGet.getAllAssignments(database));
+                database.assignmentLoad(canvasGet.getAllAssignments(database.getCourses()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -165,7 +183,7 @@ public class MyListener extends ListenerAdapter {
     private void loadCourses() {
         if (database.getCourses().isEmpty()) {
             try {
-                database.courseLOAD(canvasGet.getCourses());
+                database.courseLoad(canvasGet.getCourses());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

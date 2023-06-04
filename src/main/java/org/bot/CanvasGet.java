@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.List;
 
 /**
  * Provides methods to interact with the Canvas API to retrieve information
@@ -78,22 +79,21 @@ public class CanvasGet {
      * @return A JSONArray of all assignments from all currently enrolled courses
      * @throws Exception If there is an error retrieving the homework assignments from the API
      */
-    public JSONArray getAllAssignments(Database db) throws Exception {
-        if (db.getCourses().isEmpty()) {
+    public JSONArray getAllAssignments(List<Course> courses) throws Exception {
+        if (getCourses().isEmpty()) {
             return new JSONArray();
         }
 
         JSONArray allAssignments = new JSONArray();
-        int[] courseIds = new int[db.getCourses().size()];
+        int[] courseIds = new int[courses.size()];
 
         // Building list of course ids to use to build urls
         // Canvas only allows grabbing assignments from one course ata time
-        for (int i = 0; i < db.getCourses().size(); i++) {
-            courseIds[i] = db.getCourses().get(i).getCourseID();
+        for (int i = 0; i < courses.size(); i++) {
+            courseIds[i] = courses.get(i).getCourseID();
         }
 
         for (int courseId : courseIds) {
-            // TODO: Fix API response error - Some classes don't have a courseId?. Temp fix by filtering for large course IDs.
             // Pagination fix - Grabs assignments by page until nothing is returned
             int page = 1;
             boolean moreAssignments = true;
@@ -119,5 +119,4 @@ public class CanvasGet {
         }
         return allAssignments;
     }
-
 }

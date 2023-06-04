@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,10 +42,10 @@ class MessageBuilderTest {
         jsonCourse.put("id", 101);
         jsonCourse.put("name", "Course 2");
         jsonCourses.put(jsonCourse);
-        database.courseLOAD(jsonCourses);
+        database.courseLoad(jsonCourses);
 
         // Test starts here
-        ArrayList<String> s = messageBuilder.convertCourses(database.getCourses());
+        List<String> s = messageBuilder.convertCourses(database.getCourses());
         assertEquals("```Course 1\n" +
                 "Course 2```", s.get(0));
     }
@@ -64,7 +64,7 @@ class MessageBuilderTest {
 
         jsonCourses.put(jsonCourse);
 
-        database.courseLOAD(jsonCourses);
+        database.courseLoad(jsonCourses);
 
         // Regular assignment
         jsonAssignments = new JSONArray();
@@ -128,7 +128,7 @@ class MessageBuilderTest {
         jsonCourse.put("id", 100);
         jsonCourse.put("name", "CSC101");
         jsonCourses.put(jsonCourse);
-        database.courseLOAD(jsonCourses);
+        database.courseLoad(jsonCourses);
 
         // Initializing list of assignments
         jsonAssignments = new JSONArray();
@@ -146,7 +146,7 @@ class MessageBuilderTest {
 
         database.assignmentLoad(jsonAssignments);
 
-        ArrayList<String> sArr = messageBuilder.convertAssignments(database.getAssignments());
+        List<String> sArr = messageBuilder.convertAssignments(database.getAssignments());
         assertTrue(sArr.size() > 1);
 
         for (String s : sArr) {

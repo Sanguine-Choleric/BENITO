@@ -77,7 +77,7 @@ public class CanvasGetTest {
     @Test
     void testGetAllAssignmentsNoCourses() throws Exception {
         database.clear();
-        JSONArray assignments = canvasGet.getAllAssignments(database);
+        JSONArray assignments = canvasGet.getAllAssignments(database.getCourses());
         assertNotNull(assignments);
         assertEquals(0, assignments.length());
     }
@@ -86,8 +86,8 @@ public class CanvasGetTest {
     // (or Canvas did)
     @Test
     void testGetAllAssignments() throws Exception {
-        database.courseLOAD(canvasGet.getCourses());
-        JSONArray assignments = canvasGet.getAllAssignments(database);
+        database.courseLoad(canvasGet.getCourses());
+        JSONArray assignments = canvasGet.getAllAssignments(database.getCourses());
         assertNotNull(assignments);
     }
 }
