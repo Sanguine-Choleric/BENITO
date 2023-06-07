@@ -8,32 +8,38 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.util.ArrayList;
 
 public class MyListener extends ListenerAdapter {
+    Database database;
+    CanvasGet canvasGet;
+    MessageBuilder messageBuilder;
+
+    public MyListener(Database database) {
+        this.database = database;
+        this.canvasGet = new CanvasGet();
+        this.messageBuilder = new MessageBuilder(database);
+    }
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
 
-        if (event.getAuthor().isBot())
-            return;
+        if (event.getAuthor().isBot()) return;
 
         Message message = event.getMessage();
         String content = message.getContentRaw();
+        MessageChannel channel = event.getChannel();
 
         switch (content) {
-            case "!ping" -> {
-                MessageChannel channel = event.getChannel();
-                channel.sendMessage("Pong!").queue();
-            }
+            case "!ping" -> channel.sendMessage("Pong!").queue();
 
-            case "!help" -> {
-                MessageChannel channel = event.getChannel();
-
+            default -> {
                 ArrayList<String[]> commandList = new ArrayList<>();
                 commandList.add(new String[]{"!ping", "Pong!"});
                 commandList.add(new String[]{"!help", "This message"});
+                commandList.add(new String[]{"!update", "Update the database"});
                 commandList.add(new String[]{"!courses", "List all courses"});
                 commandList.add(new String[]{"!hw", "List all assignments"});
                 commandList.add(new String[]{"!upcoming", "List all upcoming assignments"});
                 commandList.add(new String[]{"!overdue", "List all overdue assignments"});
-                commandList.add(new String[]{"!past", "List all past submitted assignments"});
+                commandList.add(new String[]{"!submitted", "List all past submitted assignments"});
                 commandList.add(new String[]{"!undated", "List all undated assignments"});
 
                 int maxCommandLength = 0;
@@ -43,203 +49,143 @@ public class MyListener extends ListenerAdapter {
 
                 StringBuilder formattedCommands = new StringBuilder();
                 for (String[] command : commandList) {
-                    String formattedCommand = String.format("%-" + maxCommandLength + "s - %s%n", command[0], command[1]);
+                    String formattedCommand = String.format("%-" + maxCommandLength + "s | %s%n", command[0], command[1]);
                     formattedCommands.append(formattedCommand);
                 }
 
-                String outputString = String.format("```\n%s\n```", formattedCommands.toString());
+                String outputString = String.format("```\n%s\n```", formattedCommands);
                 channel.sendMessage(outputString).queue();
             }
 
-            // Temp; UI guys redo this
-            case "!courses" -> {
-                MessageChannel channel = event.getChannel();
-
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting classes").queue();
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-//                // channel.sendMessage(messageBuilder(App.db.getCourses_AL(), "name")).queue();
-//                for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
-//                    channel.sendMessage(App.db.getCourses_AL().get(i).getCourseName()).queue();
-//                }
-
-                ArrayList<String> allCourses = messageBuilder.convert(App.db.getCourses_AL());
-                for (String s : allCourses) {
-                    channel.sendMessage(s).queue();
-                }
-
-            }
-
-            // Temp; UI guys redo this
-            case "!hw" -> {
-                MessageChannel channel = event.getChannel();
-
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                channel.sendMessage("Getting All Assignments").queue();
+            case "!update" -> {
                 try {
-                    App.db.assLOAD(CanvasGet.getAllAssignments());
+                    channel.sendMessage("Updating Courses").queue();
+                    database.courseLoad(canvasGet.getCourses());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    channel.sendMessage("Updating Assignments").queue();
+                    database.assignmentLoad(canvasGet.getAllAssignments(database.getCourses()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> allHw = messageBuilder.convert(App.db.getAllAss_AL());
-                for (String s : allHw) {
+                channel.sendMessage("Database Updated").queue();
+            }
+
+            // Temp; UI guys redo this
+            case "!courses" -> {
+                channel.sendMessage("Getting Courses").queue();
+                loadCourses();
+
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertCourses(database.getCourses())) {
+                    channel.sendMessage(s).queue();
+                }
+            }
+
+            // Temp; UI guys redo this
+            case "!hw" -> {
+                loadCourses();
+
+                channel.sendMessage("Getting All Assignments").queue();
+                loadAssignments();
+
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getAssignments())) {
                     channel.sendMessage(s).queue();
                 }
             }
 
             // Temp; UI guys redo this
             case "!upcoming" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Upcoming Assignments").queue();
                 try {
-                    App.db.setUpcomingAss_AL(Database.upcomingDue(App.db.getAllAss_AL()));
+                    database.setUpcomingAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> upcoming = messageBuilder.convert(App.db.getUpcomingAss_AL());
-                for (String s : upcoming) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getUpcoming())) {
                     channel.sendMessage(s).queue();
                 }
-
             }
 
             // Temp; UI guys redo this
             case "!overdue" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Overdue Assignments").queue();
                 try {
-                    App.db.setOverdueAss_AL(Database.overDue(App.db.getAllAss_AL()));
+                    database.setOverdueAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> overdue = messageBuilder.convert(App.db.getOverdueAss_AL());
-                for (String s : overdue) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getOverdue())) {
                     channel.sendMessage(s).queue();
                 }
             }
             case "!undated" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Undated Assignments").queue();
                 try {
-                    App.db.setUndatedAss_AL(Database.undatedAssignments(App.db.getAllAss_AL()));
+                    database.setUndatedAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> undated = messageBuilder.convert(App.db.getUndatedAss_AL());
-                for (String s : undated) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getUndated())) {
                     channel.sendMessage(s).queue();
                 }
             }
 
             // Temp; UI guys redo this
             case "!submitted" -> {
-                MessageChannel channel = event.getChannel();
-                if (App.db.getCourses_AL().isEmpty()) {
-                    channel.sendMessage("Getting Classes").queue();
-
-                    try {
-                        App.db.courseLOAD(CanvasGet.getCourses());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (App.db.getAllAss_AL().isEmpty()) {
-                    channel.sendMessage("Getting All Assignments").queue();
-
-                    try {
-                        App.db.assLOAD(CanvasGet.getAllAssignments());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                loadCourses();
+                loadAssignments();
 
                 channel.sendMessage("Getting Submitted Assignments").queue();
                 try {
-                    App.db.setPastSubmittedAss_AL(Database.pastSubmitted(App.db.getAllAss_AL()));
+                    database.setSubmittedAssignments();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-                ArrayList<String> past = messageBuilder.convert(App.db.getPastSubmittedAss_AL());
-                for (String s : past) {
+                messageBuilder = new MessageBuilder(database);
+                for (String s : messageBuilder.convertAssignments(database.getSubmitted())) {
                     channel.sendMessage(s).queue();
                 }
+            }
+        }
+    }
+
+    private void loadAssignments() {
+        if (database.getAssignments().isEmpty()) {
+            try {
+                database.assignmentLoad(canvasGet.getAllAssignments(database.getCourses()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void loadCourses() {
+        if (database.getCourses().isEmpty()) {
+            try {
+                database.courseLoad(canvasGet.getCourses());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }

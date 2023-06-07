@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main", "*" ]
+  pull_request:
+    branches: [ "main" ]
 
 env:
   CANVAS_KEY: ${{ secrets.CANVAS_KEY }}
@@ -32,7 +32,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Test with Maven
-        run: mvn -B test --file pom.xml
+        run: mvn -B test --file pom_bak.xml
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph

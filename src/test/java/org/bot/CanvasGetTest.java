@@ -15,6 +15,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CanvasGetTest {
+    Database database = new Database();
+    CanvasGet canvasGet = new CanvasGet();
 
     @Test
     public void testCanvasAPIGetter() throws IOException {
@@ -31,7 +33,7 @@ public class CanvasGetTest {
         when(connection.getInputStream()).thenReturn(responseStream);
 
         // Call the method being tested
-        JSONArray actualResponse = CanvasGet.canvasAPIGetter(connection);
+        JSONArray actualResponse = canvasGet.canvasAPIGetter(connection);
 
         // Assert that the actual response matches the expected response
         assertEquals(expectedResponse.toString(), actualResponse.toString());
@@ -52,7 +54,7 @@ public class CanvasGetTest {
         when(connection.getInputStream()).thenReturn(responseStream);
 
         // Call the method being tested
-        JSONArray actualResponse = CanvasGet.canvasAPIGetter(connection);
+        JSONArray actualResponse = canvasGet.canvasAPIGetter(connection);
 
         // Assert that the actual response matches the expected response
         assertEquals(expectedResponse.toString(), actualResponse.toString());
@@ -66,7 +68,7 @@ public class CanvasGetTest {
     @Test
     void testGetCourses() throws Exception {
         // Real courses
-        JSONArray courses = CanvasGet.getCourses();
+        JSONArray courses = canvasGet.getCourses();
         assertNotNull(courses);
     }
 
@@ -74,8 +76,8 @@ public class CanvasGetTest {
     // (or Canvas did)
     @Test
     void testGetAllAssignmentsNoCourses() throws Exception {
-        App.db.clear();
-        JSONArray assignments = CanvasGet.getAllAssignments();
+        database.clear();
+        JSONArray assignments = canvasGet.getAllAssignments(database.getCourses());
         assertNotNull(assignments);
         assertEquals(0, assignments.length());
     }
@@ -84,8 +86,8 @@ public class CanvasGetTest {
     // (or Canvas did)
     @Test
     void testGetAllAssignments() throws Exception {
-        App.db.courseLOAD(CanvasGet.getCourses());
-        JSONArray assignments = CanvasGet.getAllAssignments();
+        database.courseLoad(canvasGet.getCourses());
+        JSONArray assignments = canvasGet.getAllAssignments(database.getCourses());
         assertNotNull(assignments);
     }
 }
