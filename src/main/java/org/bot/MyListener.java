@@ -15,7 +15,7 @@ public class MyListener extends ListenerAdapter {
     public MyListener(Database database) {
         this.database = database;
         this.canvasGet = new CanvasGet();
-        this.messageBuilder = new MessageBuilder(database);
+        this.messageBuilder = new MessageBuilder();
     }
 
     @Override
@@ -79,10 +79,11 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Getting Courses").queue();
                 loadCourses();
 
-                messageBuilder = new MessageBuilder(database);
-                for (String s : messageBuilder.convertCourses(database.getCourses())) {
+                messageBuilder.setCourses(database.getCourses());
+                for (String s : messageBuilder.stringsToMessages(messageBuilder.getCourses())) {
                     channel.sendMessage(s).queue();
                 }
+
             }
 
             // Temp; UI guys redo this
@@ -92,10 +93,10 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Getting All Assignments").queue();
                 loadAssignments();
 
-                messageBuilder = new MessageBuilder(database);
-                for (String s : messageBuilder.convertAssignments(database.getAssignments())) {
-                    channel.sendMessage(s).queue();
-                }
+//                messageBuilder = new MessageBuilder(database);
+//                for (String s : messageBuilder.convertAssignments(database.getAssignments())) {
+//                    channel.sendMessage(s).queue();
+//                }
             }
 
             // Temp; UI guys redo this
@@ -110,10 +111,10 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                messageBuilder = new MessageBuilder(database);
-                for (String s : messageBuilder.convertAssignments(database.getUpcoming())) {
-                    channel.sendMessage(s).queue();
-                }
+//                messageBuilder = new MessageBuilder(database);
+//                for (String s : messageBuilder.convertAssignments(database.getUpcoming())) {
+//                    channel.sendMessage(s).queue();
+//                }
             }
 
             // Temp; UI guys redo this
@@ -128,10 +129,10 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                messageBuilder = new MessageBuilder(database);
-                for (String s : messageBuilder.convertAssignments(database.getOverdue())) {
-                    channel.sendMessage(s).queue();
-                }
+//                messageBuilder = new MessageBuilder(database);
+//                for (String s : messageBuilder.convertAssignments(database.getOverdue())) {
+//                    channel.sendMessage(s).queue();
+//                }
             }
             case "!undated" -> {
                 loadCourses();
@@ -144,10 +145,10 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                messageBuilder = new MessageBuilder(database);
-                for (String s : messageBuilder.convertAssignments(database.getUndated())) {
-                    channel.sendMessage(s).queue();
-                }
+//                messageBuilder = new MessageBuilder(database);
+//                for (String s : messageBuilder.convertAssignments(database.getUndated())) {
+//                    channel.sendMessage(s).queue();
+//                }
             }
 
             // Temp; UI guys redo this
@@ -162,10 +163,10 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                messageBuilder = new MessageBuilder(database);
-                for (String s : messageBuilder.convertAssignments(database.getSubmitted())) {
-                    channel.sendMessage(s).queue();
-                }
+//                messageBuilder = new MessageBuilder(database);
+//                for (String s : messageBuilder.convertAssignments(database.getSubmitted())) {
+//                    channel.sendMessage(s).queue();
+//                }
             }
         }
     }

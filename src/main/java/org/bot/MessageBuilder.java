@@ -1,123 +1,77 @@
 package org.bot;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Another redesign
-
 public class MessageBuilder {
-    Database database;
+    int CHAR_LIMIT = 2000;
+    ArrayList<String> courses;
 
-    public MessageBuilder(Database database) {
-        this.database = database;
+    public ArrayList<String> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = this.convertCourses(courses);
     }
 
     /**
-     * Converts an arraylist of assignments into pretty strings. Works with
-     * Discord's 2000-character limit.
+     * Converts a course to a string
      *
-     * @param assignments ArrayList of assignments to convert to a string
-     * @return ArrayList of strings, each of which is a message to be sent to
-     * Discord
+     * @param course a Course object
+     * @return String
      */
-    public List<String> convertAssignments(List<Assignment> assignments) {
-        List<String> strings = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        int charCount = 0;
-
-        // I am the way into the city of woe
-        for (Assignment assignment : assignments) {
-
-            // I am the way into eternal pain
-            String assignmentString = assignmentToString(assignment);
-
-            // I am the way to go among the lost
-            if (charCount + assignmentString.length() + 1 > 1994) { // 2000 - 6 for "```" x2
-
-                // Justice caused my high architect to move
-                strings.add("```" + sb + "```");
-                sb = new StringBuilder();
-                charCount = 0;
-            }
-
-            // Divine omnipotence created me
-            if (charCount > 0) {
-
-                // The highest wisdom, and the primal love
-                sb.append("\n");
-                charCount += 1;
-            }
-
-            // Before me there were no created things
-            sb.append(assignmentString);
-            charCount += assignmentString.length();
-        }
-
-        // But those that last forever - as do I
-        if (sb.length() > 0) {
-            strings.add("```" + sb + "```");
-        }
-
-        // Abandon all hope, ye who enter here
-        return strings;
-    }
-
-    public List<String> convertCourses(List<Course> courses) {
-        List<String> strings = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        int charcount = 0;
-        for (Course course : courses) {
-            String courseString = courseToString(course);
-            if (charcount > 0) {
-                sb.append("\n");
-            }
-
-            sb.append(courseString);
-            charcount += courseString.length();
-        }
-        strings.add("```" + sb + "```");
-
-        return strings;
-    }
-
     private String courseToString(Course course) {
-        return String.format("%s", course.getCourseName());
+        return course.getCourseName();
     }
 
-    private String assignmentToString(Assignment assignment) {
-        String dueAt = formatDueDate(assignment.getDateFormat());
-        String courseName = formatCourseName(assignment.getCourseID());
-        String name = formatAssignmentName(assignment.getAssName());
-        return String.format("%s | %s | %s", dueAt, courseName, name);
-    }
-
-    private String formatDueDate(LocalDateTime dueDate) {
-        if (dueDate == null) {
-            return "           "; // 11 spaces for "HH:MM AM/PM"
+    /**
+     * Converts a list of courses to a list of strings
+     *
+     * @param courses a list of Course objects
+     * @return ArrayList<String>
+     */
+    private ArrayList<String> convertCourses(List<Course> courses) {
+        ArrayList<String> stringCourses = new ArrayList<>();
+        for (Course c : courses) {
+            stringCourses.add(courseToString(c));
         }
-        return dueDate.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
+        return stringCourses;
     }
 
-    private String formatCourseName(int courseId) {
-        String courseName;
+    /**
+     * Compacts a list of strings into a list of Discord optimized messages
+     *
+     * @param courses a list of Course names
+     * @return A compacted list of Course names
+     */
+    public ArrayList<String> stringsToMessages(List<String> courses) {
+        ArrayList<String> messages = new ArrayList<>();
+        StringBuilder message = new StringBuilder();
 
-        for (Course c : database.getCourses()) {
-            if (c.getCourseID() == courseId) {
-                courseName = c.getCourseName().split("\\s+")[0]; // Only take the first word of the course name
-                return courseName;
+        // Algorithm thought process
+        // 1. Append strings until char limit is reached
+        // 2. If char limit is reached, add message to messages
+        // 3. Repeat until all strings are added
+        for (String s : courses) {
+            // Check if adding the string will exceed the char limit
+            if (message.length() + s.length() + "```".length() + "```".length() >= CHAR_LIMIT) {
+                messages.add("```" + message.toString() + "```");
+                message = new StringBuilder();
             }
-        }
-        return "      "; // 7 spaces - temporary fix for when course name is not found
-    }
 
-    private String formatAssignmentName(String AssignmentName) {
-        int MAX_LENGTH = 50;
-        String stripped = AssignmentName.replaceAll("[\\\\*_`\\[\\]]", "\\\\$0");
-        if (stripped.length() > MAX_LENGTH) {
-            return stripped.substring(0, MAX_LENGTH) + "...";
+            // Newline check first to avoid trailing newline
+            if (message.length() > 0) message.append("\n");
+
+            // Append string
+            message.append(s);
         }
-        return stripped;
+
+        // Add leftovers since it likely won't meet the char limit
+        if (message.length() > 0) {
+            messages.add("```" + message.toString() + "```");
+        }
+
+        return messages;
     }
 }
