@@ -50,7 +50,7 @@ public class AssignmentTest {
     void testGetDateFormat() {
         LocalDateTime localized = ZonedDateTime.parse(assignment.getAssDate(), DateTimeFormatter.ISO_DATE_TIME)
                 .withZoneSameInstant(java.time.ZoneId.systemDefault()).toLocalDateTime();
-        assertEquals(localized.toString(), assignment.getDateFormat().toString(), "Testing date format getter");
+        assertEquals(localized.toString(), assignment.getDueDate().toString(), "Testing date format getter");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class AssignmentTest {
         jsonAssignment.put("due_at", JSONObject.NULL);
         assignment = new Assignment(jsonAssignment);
         assertEquals("null", assignment.getAssDate());
-        assertNull(assignment.getDateFormat(), "Testing date format getter with null date");
+        assertNull(assignment.getDueDate(), "Testing date format getter with null date");
 
     }
 

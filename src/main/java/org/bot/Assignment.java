@@ -48,7 +48,7 @@ public class Assignment {
         return assDate;
     }
 
-    public LocalDateTime getDateFormat() {
+    public LocalDateTime getDueDate() {
         return assDateFormat;
     }
 

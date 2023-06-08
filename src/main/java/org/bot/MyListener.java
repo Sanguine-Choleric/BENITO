@@ -15,7 +15,7 @@ public class MyListener extends ListenerAdapter {
     public MyListener(Database database) {
         this.database = database;
         this.canvasGet = new CanvasGet();
-        this.messageBuilder = new MessageBuilder();
+        this.messageBuilder = new MessageBuilder(database);
     }
 
     @Override
