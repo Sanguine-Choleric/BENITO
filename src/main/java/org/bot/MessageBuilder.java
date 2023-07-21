@@ -176,10 +176,10 @@ public class MessageBuilder {
     /**
      * Compacts a list of strings into a list of Discord optimized messages
      *
-     * @param courses a list of Course names
+     * @param row a list of Course names
      * @return A compacted list of Course names
      */
-    public ArrayList<String> stringsToMessages(List<String> courses) {
+    public ArrayList<String> stringsToMessages(List<String> row) {
         ArrayList<String> messages = new ArrayList<>();
         StringBuilder message = new StringBuilder();
 
@@ -187,7 +187,7 @@ public class MessageBuilder {
         // 1. Append strings until char limit is reached
         // 2. If char limit is reached, add message to messages
         // 3. Repeat until all strings are added
-        for (String s : courses) {
+        for (String s : row) {
             // Check if adding the string will exceed the char limit
             if (message.length() + s.length() + "```".length() + "```".length() >= CHAR_LIMIT) {
                 messages.add("```" + message.toString() + "```");
@@ -207,5 +207,20 @@ public class MessageBuilder {
         }
 
         return messages;
+    }
+
+    public void print() {
+        if (!this.courses.isEmpty() && !this.assignments.isEmpty()) {
+            for (String course : courses) {
+                System.out.println(course);
+            }
+
+            for (String assignment : assignments) {
+                System.out.println(assignment);
+            }
+        } else {
+            System.out.println("Course: " + this.courses.isEmpty());
+            System.out.println("Assignment: " + this.assignments.isEmpty());
+        }
     }
 }
