@@ -5,32 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageBuilder {
-    int CHAR_LIMIT = 2000;
-    Database database;
-    ArrayList<String> courses;
-    ArrayList<String> assignments;
+    static int CHAR_LIMIT = 2000;
 
-    public MessageBuilder(Database database) {
-        this.database = database;
-        this.courses = new ArrayList<>();
-        this.assignments = new ArrayList<>();
+    public MessageBuilder() {
     }
 
-    public ArrayList<String> getAssignments() {
-        return assignments;
-    }
-
-    // Loads from database
-    public void setAssignments(List<Assignment> assignments) {
-        this.assignments = this.convertAssignments(assignments);
-    }
-
-    private ArrayList<String> convertAssignments(List<Assignment> assignments) {
+    private static ArrayList<String> convertAssignments(List<Assignment> assignments, List<Course> courses) {
         ArrayList<String> stringAssignments = new ArrayList<>();
-        int[] widths = calculateAssignmentColumnWidths(assignments);
+        int[] widths = calculateAssignmentColumnWidths(assignments, courses);
 
         for (Assignment a : assignments) {
-            stringAssignments.add(assignmentToString(a, widths));
+            stringAssignments.add(assignmentToString(a, courses, widths));
         }
         return stringAssignments;
     }
@@ -41,7 +26,7 @@ public class MessageBuilder {
      * @param assignments a list of Assignment objects
      * @return int[] an array of column widths. Index 0 is dueDate, 1 is courseName, 2 is assignmentName
      */
-    public int[] calculateAssignmentColumnWidths(List<Assignment> assignments) {
+    private static int[] calculateAssignmentColumnWidths(List<Assignment> assignments, List<Course> courses) {
         int[] columnWidths = {0, 0, 0}; // dueDate, courseName, assignmentName
 
         for (Assignment a : assignments) {
@@ -52,7 +37,7 @@ public class MessageBuilder {
             }
 
             // Calculate courseName width
-            int courseNameWidth = formatAssignmentCourseName(a, 0).length();
+            int courseNameWidth = formatAssignmentCourseName(a, courses, 0).length();
             if (courseNameWidth > columnWidths[1]) {
                 columnWidths[1] = courseNameWidth;
             }
@@ -66,10 +51,10 @@ public class MessageBuilder {
         return columnWidths;
     }
 
-    private String assignmentToString(Assignment assignment, int[] widths) {
+    private static String assignmentToString(Assignment assignment, List<Course> courses, int[] widths) {
 
         String dueDate = formatAssignmentDueDate(assignment, widths[0]);
-        String courseName = formatAssignmentCourseName(assignment, widths[1]);
+        String courseName = formatAssignmentCourseName(assignment, courses, widths[1]);
         String assignmentName = formatAssignmentName(assignment, widths[2]);
 
         return String.format("%s | %s | %s", dueDate, courseName, assignmentName);
@@ -82,7 +67,7 @@ public class MessageBuilder {
      * @param width      the width of the column
      * @return The formatted due date
      */
-    private String formatAssignmentDueDate(Assignment assignment, int width) {
+    private static String formatAssignmentDueDate(Assignment assignment, int width) {
         String dueDate = "";
 
         if (width == 0) {
@@ -108,9 +93,9 @@ public class MessageBuilder {
      * @param width      the width of the column
      * @return The formatted course name
      */
-    private String formatAssignmentCourseName(Assignment assignment, int width) {
+    private static String formatAssignmentCourseName(Assignment assignment, List<Course> courses, int width) {
         String courseName = "";
-        for (Course c : database.getCourses()) {
+        for (Course c : courses) {
             if (c.getCourseID() == assignment.getCourseID()) {
                 courseName = c.getCourseName().split(" ")[0];
                 break;
@@ -132,21 +117,12 @@ public class MessageBuilder {
      * @param width      the width of the column
      * @return The formatted assignment name
      */
-    private String formatAssignmentName(Assignment assignment, int width) {
+    private static String formatAssignmentName(Assignment assignment, int width) {
         String assignmentName = assignment.getAssName();
 
         // Future processing if decided
 
         return assignmentName;
-    }
-
-    public ArrayList<String> getCourses() {
-        return courses;
-    }
-
-    // Loads from database
-    public void setCourses(List<Course> courses) {
-        this.courses = this.convertCourses(courses);
     }
 
     /**
@@ -155,10 +131,14 @@ public class MessageBuilder {
      * @param courses a list of Course objects
      * @return ArrayList<String>
      */
-    private ArrayList<String> convertCourses(List<Course> courses) {
+    private static ArrayList<String> convertCourses(List<Course> courses) {
         ArrayList<String> stringCourses = new ArrayList<>();
-        for (Course c : courses) {
-            stringCourses.add(courseToString(c));
+        if (courses.isEmpty()) {
+            stringCourses.add("No courses found");
+        } else {
+            for (Course c : courses) {
+                stringCourses.add(courseToString(c));
+            }
         }
         return stringCourses;
     }
@@ -169,17 +149,33 @@ public class MessageBuilder {
      * @param course a Course object
      * @return String
      */
-    private String courseToString(Course course) {
+    private static String courseToString(Course course) {
         return course.getCourseName();
     }
 
+    public static List<String> courseMessages(List<Course> c) {
+        return stringsToMessages(convertCourses(c));
+    }
+
+    public static List<String> assignmentMessages(List<Assignment> a, List<Course> c) {
+        ArrayList<String> messages = new ArrayList<>();
+
+        if (a.isEmpty()) {
+            messages.add("No assignments found");
+        } else {
+            messages = convertAssignments(a, c);
+        }
+        return stringsToMessages(messages);
+    }
+
     /**
-     * Compacts a list of strings into a list of Discord optimized messages
+     * Compacts a list of strings into a list of Discord optimized messages.
+     * Creates a list of max 2000 char strings stored in an array
      *
      * @param row a list of Course names
      * @return A compacted list of Course names
      */
-    public ArrayList<String> stringsToMessages(List<String> row) {
+    private static ArrayList<String> stringsToMessages(List<String> row) {
         ArrayList<String> messages = new ArrayList<>();
         StringBuilder message = new StringBuilder();
 
@@ -209,18 +205,18 @@ public class MessageBuilder {
         return messages;
     }
 
-    public void print() {
-        if (!this.courses.isEmpty() && !this.assignments.isEmpty()) {
-            for (String course : courses) {
-                System.out.println(course);
-            }
-
-            for (String assignment : assignments) {
-                System.out.println(assignment);
-            }
-        } else {
-            System.out.println("Course: " + this.courses.isEmpty());
-            System.out.println("Assignment: " + this.assignments.isEmpty());
-        }
-    }
+//    protected void print() {
+//        if (!this.courses.isEmpty() && !this.assignments.isEmpty()) {
+//            for (String course : courses) {
+//                System.out.println(course);
+//            }
+//
+//            for (String assignment : assignments) {
+//                System.out.println(assignment);
+//            }
+//        } else {
+//            System.out.println("Course: " + this.courses.isEmpty());
+//            System.out.println("Assignment: " + this.assignments.isEmpty());
+//        }
+//    }
 }

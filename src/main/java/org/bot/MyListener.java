@@ -7,15 +7,15 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
 
+// TODO: Better integration with MessageBuilder
+
 public class MyListener extends ListenerAdapter {
     Database database;
     CanvasGet canvasGet;
-    MessageBuilder messageBuilder;
 
     public MyListener(Database database) {
         this.database = database;
         this.canvasGet = new CanvasGet();
-        this.messageBuilder = new MessageBuilder(database);
     }
 
     @Override
@@ -79,8 +79,7 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Getting Courses").queue();
                 loadCourses();
 
-                messageBuilder.setCourses(database.getCourses());
-                for (String s : messageBuilder.stringsToMessages(messageBuilder.getCourses())) {
+                for (String s : MessageBuilder.courseMessages(database.getCourses())) {
                     channel.sendMessage(s).queue();
                 }
 
@@ -93,10 +92,9 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("Getting All Assignments").queue();
                 loadAssignments();
 
-//                messageBuilder = new MessageBuilder(database);
-//                for (String s : messageBuilder.convertAssignments(database.getAssignments())) {
-//                    channel.sendMessage(s).queue();
-//                }
+                for (String s : MessageBuilder.assignmentMessages(database.getAssignments(), database.getCourses())) {
+                    channel.sendMessage(s).queue();
+                }
             }
 
             // Temp; UI guys redo this
@@ -111,10 +109,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-//                messageBuilder = new MessageBuilder(database);
-//                for (String s : messageBuilder.convertAssignments(database.getUpcoming())) {
-//                    channel.sendMessage(s).queue();
-//                }
+                for (String s : MessageBuilder.assignmentMessages(database.getUpcoming(), database.getCourses())) {
+                    channel.sendMessage(s).queue();
+                }
             }
 
             // Temp; UI guys redo this
@@ -129,10 +126,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-//                messageBuilder = new MessageBuilder(database);
-//                for (String s : messageBuilder.convertAssignments(database.getOverdue())) {
-//                    channel.sendMessage(s).queue();
-//                }
+                for (String s : MessageBuilder.assignmentMessages(database.getOverdue(), database.getCourses())) {
+                    channel.sendMessage(s).queue();
+                }
             }
             case "!undated" -> {
                 loadCourses();
@@ -145,10 +141,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-//                messageBuilder = new MessageBuilder(database);
-//                for (String s : messageBuilder.convertAssignments(database.getUndated())) {
-//                    channel.sendMessage(s).queue();
-//                }
+                for (String s : MessageBuilder.assignmentMessages(database.getUndated(), database.getCourses())) {
+                    channel.sendMessage(s).queue();
+                }
             }
 
             // Temp; UI guys redo this
@@ -163,10 +158,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-//                messageBuilder = new MessageBuilder(database);
-//                for (String s : messageBuilder.convertAssignments(database.getSubmitted())) {
-//                    channel.sendMessage(s).queue();
-//                }
+                for (String s : MessageBuilder.assignmentMessages(database.getSubmitted(), database.getCourses())) {
+                    channel.sendMessage(s).queue();
+                }
             }
         }
     }
