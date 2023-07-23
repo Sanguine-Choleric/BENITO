@@ -1,5 +1,6 @@
 package org.bot;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,19 +70,24 @@ public class MessageBuilder {
      */
     private static String formatAssignmentDueDate(Assignment assignment, int width) {
         String dueDate = "";
+        LocalDateTime dd;
 
         if (width == 0) {
             if (assignment.getDueDate() == null) {
                 return dueDate;
             }
-            dueDate = assignment.getDueDate().format(DateTimeFormatter.ofPattern("MM/dd hh:mm"));
+            dd = assignment.getDueDate();
+            dueDate = dd.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
+//            dueDate = assignment.getDueDate().format(DateTimeFormatter.ofPattern("MM/dd hh:mm"));
             return dueDate;
 
         } else {
             if (assignment.getDueDate() == null) {
                 return String.format("%-" + width + "s", dueDate); // 11 spaces
             }
-            dueDate = assignment.getDueDate().format(DateTimeFormatter.ofPattern("MM/dd hh:mm"));
+            dd = assignment.getDueDate();
+            dueDate = dd.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
+//            dueDate = assignment.getDueDate().format(DateTimeFormatter.ofPattern("MM/dd hh:mm"));
             return String.format("%-" + width + "s", dueDate);
         }
     }

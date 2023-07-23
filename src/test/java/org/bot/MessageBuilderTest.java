@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -79,6 +81,13 @@ class MessageBuilderTest {
 
     @Nested
     class assignmentMessagesTests {
+        String expectedDate;
+
+        @BeforeEach
+        void setUp() {
+            expectedDate = "2020-01-01T00:00:00Z";
+        }
+
         @Test
         void assignmentMessages() {
             jsonCourse = new JSONObject();
@@ -94,7 +103,7 @@ class MessageBuilderTest {
             jsonAssignment = new JSONObject();
             jsonAssignment.put("id", 10);
             jsonAssignment.put("name", "Assignment 1");
-            jsonAssignment.put("due_at", "2020-01-01T00:00:00Z");
+            jsonAssignment.put("due_at", expectedDate);
             jsonAssignment.put("has_submitted_submissions", true);
             jsonAssignment.put("course_id", 1);
             jsonAssignments.put(jsonAssignment);
@@ -110,8 +119,11 @@ class MessageBuilderTest {
             database.courseLoad(jsonCourses);
             database.assignmentLoad(jsonAssignments);
 
+            LocalDateTime expectedDT = database.getAssignments().get(0).getDueDate();
+            String dueAt = expectedDT.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"));
+
             String message = "```" +
-                    "12/31 04:00 | Course1  | Assignment 1\n" +
+                    dueAt + " | Course1  | Assignment 1\n" +
                     "            | Course10 | Assignment 2 but it is very long and will be trunc..." +
                     "```";
 
@@ -138,7 +150,7 @@ class MessageBuilderTest {
                 jsonAssignment = new JSONObject();
                 jsonAssignment.put("id", i);
                 jsonAssignment.put("name", "Assignment " + i);
-                jsonAssignment.put("due_at", "2020-01-01T00:00:00Z");
+                jsonAssignment.put("due_at", expectedDate);
                 jsonAssignment.put("has_submitted_submissions", true);
                 jsonAssignment.put("course_id", 1);
                 jsonAssignments.put(jsonAssignment);
