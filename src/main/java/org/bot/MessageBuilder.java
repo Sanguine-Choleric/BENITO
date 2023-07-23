@@ -119,8 +119,10 @@ public class MessageBuilder {
      */
     private static String formatAssignmentName(Assignment assignment, int width) {
         String assignmentName = assignment.getAssName();
-
         // Future processing if decided
+        if (assignmentName.length() > 50) {
+            assignmentName = assignmentName.substring(0, 50) + "...";
+        }
 
         return assignmentName;
     }

@@ -101,7 +101,7 @@ class MessageBuilderTest {
 
             jsonAssignment = new JSONObject();
             jsonAssignment.put("id", 20);
-            jsonAssignment.put("name", "Assignment 2");
+            jsonAssignment.put("name", "Assignment 2 but it is very long and will be truncated");
             jsonAssignment.put("due_at", JSONObject.NULL);
             jsonAssignment.put("has_submitted_submissions", true);
             jsonAssignment.put("course_id", 10);
@@ -112,7 +112,7 @@ class MessageBuilderTest {
 
             String message = "```" +
                     "12/31 04:00 | Course1  | Assignment 1\n" +
-                    "            | Course10 | Assignment 2" +
+                    "            | Course10 | Assignment 2 but it is very long and will be trunc..." +
                     "```";
 
             assertEquals(message, MessageBuilder.assignmentMessages(database.getAssignments(), database.getCourses()).get(0));
