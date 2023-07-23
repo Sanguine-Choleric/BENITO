@@ -109,14 +109,14 @@ public class Database {
         // Filters out overdue assignments
         for (Assignment a : allAssignments) {
             if (!Objects.equals(a.getAssDate(), "null")) {
-                if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
+                if (a.getDueDate().isAfter(today) || a.getDueDate().isEqual(today)) {
                     upcoming.add(a);
                 }
             }
         }
 
         // Sorts assignments by due date, closest to today first
-        upcoming.sort(Comparator.comparing(Assignment::getDateFormat));
+        upcoming.sort(Comparator.comparing(Assignment::getDueDate));
         return upcoming;
     }
 
@@ -135,14 +135,14 @@ public class Database {
         // Filters out upcoming assignments
         for (Assignment a : allAssignments) {
             if (!Objects.equals(a.getAssDate(), "null")) {
-                if (a.getDateFormat().isBefore(today) && !a.getHasBeenSubmitted()) {
+                if (a.getDueDate().isBefore(today) && !a.getHasBeenSubmitted()) {
                     overdue.add(a);
                 }
             }
         }
 
         // Sorts assignments by due date, closest to today first
-        overdue.sort((a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+        overdue.sort((a1, a2) -> a2.getDueDate().compareTo(a1.getDueDate()));
 
         return overdue;
     }
@@ -150,7 +150,7 @@ public class Database {
     public ArrayList<Assignment> undatedAssignments(List<Assignment> allAssignments) {
         ArrayList<Assignment> undated = new ArrayList<>();
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat() == null) {
+            if (a.getDueDate() == null) {
                 undated.add(a);
             }
         }
@@ -165,14 +165,14 @@ public class Database {
         // Filters out past/submitted assignments
         for (Assignment a : allAssignments) {
             if (!Objects.equals(a.getAssDate(), "null")) {
-                if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmitted()) {
+                if ((a.getDueDate().isBefore(today) || a.getDueDate().isEqual(today)) && a.getHasBeenSubmitted()) {
                     pastSubmitted.add(a);
                 }
             }
         }
 
         // Sorts assignments by due date, closest to today first
-        pastSubmitted.sort((a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+        pastSubmitted.sort((a1, a2) -> a2.getDueDate().compareTo(a1.getDueDate()));
 
         return pastSubmitted;
     }
